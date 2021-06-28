@@ -1,7 +1,12 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/**/*.spec.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/**/*.spec.ts',
+    '!<rootDir>/src/migrations/*.ts',
+    '!<rootDir>/src/seeds/**/*.ts',
+  ],
   coverageDirectory: '<rootDir>/coverage',
   globalSetup: '<rootDir>/test/helpers/setup-e2e-test.ts',
   moduleFileExtensions: ['js', 'json', 'ts'],
@@ -11,7 +16,7 @@ const config: Config.InitialOptions = {
   },
   rootDir: '.',
   testEnvironment: '<rootDir>/test/helpers/e2e-test-environment.js',
-  testRegex: '.*\\.spec\\.ts$',
+  testRegex: '.*.spec.ts$',
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },

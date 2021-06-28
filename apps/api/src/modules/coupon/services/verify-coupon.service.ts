@@ -22,9 +22,6 @@ export class VerifyCouponService {
   async verifyCoupon(payload: VerifyCouponBodyDto & VerifyCouponParamsDto) {
     const now = new Date();
     const products = payload.order.items.map(item => item.productId);
-    // const application = await this.findApplicationService.findByName(
-    //   payload.application,
-    // );
     const coupon = await this.couponRepository
       .findOneOrFail({
         active: true,
