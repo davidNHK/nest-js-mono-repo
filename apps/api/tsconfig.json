@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importsNotUsedAsValues": "error",
+    "incremental": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "outDir": "./dist",
+    "paths": {
+      "@api-test-helpers/*": ["test/helpers/*"],
+      "@api/*": ["src/*"]
+    },
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es2017"
+  }
+}

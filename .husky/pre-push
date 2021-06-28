@@ -1,0 +1,6 @@
+#!/bin/sh
+
+. "$(dirname $0)/_/husky.sh"
+
+set -ex
+npx lerna run --concurrency 1 --stream test:e2e --since HEAD~1
