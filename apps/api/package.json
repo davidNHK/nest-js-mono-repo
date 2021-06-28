@@ -78,8 +78,8 @@
     "seed:up": "npm run typeorm:dev -- migration:run --config ./ormconfig.seed.cli.js",
     "start:dev": "NODE_ENV=development nest start --watch",
     "start:prod": "node dist/main",
-    "test": "jest --maxWorkers=50%",
-    "test:ci": "jest --ci --coverage --runInBand",
+    "test": "NODE_ENV=test jest --maxWorkers=50%",
+    "test:ci": "NODE_ENV=test jest --ci --coverage --runInBand",
     "typeorm:dev": "NODE_ENV=development node --require ts-node/register ./node_modules/typeorm/cli.js"
   },
   "version": "0.1.0"
