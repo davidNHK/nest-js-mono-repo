@@ -1,12 +1,10 @@
-name: dependapot-auto-merge
+name: Test
 
 on:
   pull_request:
-    paths:
-      - 'apps/api/**'
 
 jobs:
-  test-api:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,5 +13,4 @@ jobs:
         with:
           node-version: 16.x
       - run: bash ./scripts/setup-ci.sh
-      - run: npx lerna run --stream --scope=api lint
-      - run: npx lerna run --stream --scope=api test:ci
+      - run: npx lerna run --stream test:ci
