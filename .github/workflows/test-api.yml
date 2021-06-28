@@ -1,4 +1,4 @@
-name: dependapot-auto-merge
+name: Test API
 
 on:
   pull_request:
