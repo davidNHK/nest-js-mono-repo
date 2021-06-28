@@ -7,6 +7,7 @@ import { LoggingInterceptor } from '@api/interceptors/logging.interceptor';
 import { ApplicationModule } from '@api/modules/application/application.module';
 import { DbOperationLogger } from '@api/modules/logger/db-operation-logger';
 import { LoggingModule } from '@api/modules/logger/logging.module';
+import { NestLogger } from '@api/modules/logger/nest-logger';
 import { RedisModule } from '@api/modules/redis/redis.module';
 import {
   ClassSerializerInterceptor,
@@ -25,7 +26,9 @@ interface AppContext {
   module: TestingModule;
 }
 
-async function createApp(moduleMetadata: ModuleMetadata): Promise<AppContext> {
+export async function createTestApp(
+  moduleMetadata: ModuleMetadata,
+): Promise<AppContext> {
   // @ts-expect-error included in e2e-test-environment and ts cannot refer that
   const { db } = global.e2eConfig;
   const module = Test.createTestingModule({
@@ -94,6 +97,15 @@ async function createApp(moduleMetadata: ModuleMetadata): Promise<AppContext> {
       whitelist: true,
     }),
   );
+  app.useLogger(app.get(NestLogger));
+  return {
+    app,
+    module: moduleRef,
+  };
+}
+
+export async function createTestServer(moduleMetadata: ModuleMetadata) {
+  const { app, module } = await createTestApp(moduleMetadata);
   const config = app.get(ConfigService);
 
   const port = config.get('port') + parseInt(process.env.JEST_WORKER_ID!, 10);
@@ -101,7 +113,7 @@ async function createApp(moduleMetadata: ModuleMetadata): Promise<AppContext> {
   await app.listen(port);
   return {
     app,
-    module: moduleRef,
+    module: module,
   };
 }
 
@@ -111,7 +123,7 @@ export function withNestAppE2EContext(
   // @ts-expect-error context need assign on beforeAll hooks and must available
   const context: AppContext = {};
   beforeAll(async () => {
-    const { app, module } = await createApp(moduleMetadata);
+    const { app, module } = await createTestServer(moduleMetadata);
     Object.assign(context, { app, module });
   });
   afterAll(async () => {

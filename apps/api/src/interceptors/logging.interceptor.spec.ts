@@ -2,7 +2,6 @@ import { Test } from '@nestjs/testing';
 import { from, Observable } from 'rxjs';
 
 import { Logger } from '../modules/logger/logger';
-import { Level } from '../modules/logger/logging.constants';
 import { LoggingInterceptor } from './logging.interceptor';
 
 describe('LoggingInterceptor', () => {
@@ -83,29 +82,32 @@ describe('LoggingInterceptor', () => {
       log: jest.fn().mockImplementation(() => null),
     };
     const module = await Test.createTestingModule({
-      providers: [
-        { provide: Logger, useValue: ApiLoggerSpy },
-        LoggingInterceptor,
-      ],
+      providers: [LoggingInterceptor],
     }).compile();
+    // @ts-expect-error
+    module.useLogger(ApiLoggerSpy);
     const loggingInterceptor =
       module.get<LoggingInterceptor>(LoggingInterceptor);
     await loggingInterceptor
       .intercept(executionContextSpy, callHandlerSpy)
       .toPromise();
-    expect(ApiLoggerSpy.log).toHaveBeenCalledWith('access log', {
-      duration: expect.any(Number),
-      http: {
-        method: 'GET',
-        params: {},
-        query: {},
-        referer: undefined,
-        request_id: expect.any(String),
-        status_code: 200,
-        url: '/private/spaces',
-        useragent: 'Chrome',
+    expect(ApiLoggerSpy.log).toHaveBeenCalledWith(
+      {
+        duration: expect.any(Number),
+        http: {
+          method: 'GET',
+          params: {},
+          query: {},
+          referer: undefined,
+          request_id: 'foobar',
+          status_code: 200,
+          url: '/private/spaces',
+          useragent: 'Chrome',
+        },
+        message: 'Access Log',
       },
-      level: Level.info,
-    });
+      'LoggingInterceptor',
+      false,
+    );
   });
 });

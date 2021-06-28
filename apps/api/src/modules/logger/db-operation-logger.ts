@@ -16,9 +16,8 @@ export class DbOperationLogger implements TypeORMLogger {
     },
   ) {
     const { level, ...info } = infoObj;
-    this.logger.log('DB Operation', {
+    this.logger.log(level, 'DB Operation', {
       ...info,
-      level,
       message,
     });
   }

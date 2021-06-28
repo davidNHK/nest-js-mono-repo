@@ -1,19 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { Logform, Logger as WinstonLogger } from 'winston';
+import { Injectable } from '@nestjs/common';
+import type { Logform } from 'winston';
+import winston from 'winston';
 
-import { Level, WINSTON_LOGGER } from './logging.constants';
+import type { Level } from './logging.constants';
+import { WinstonConfig } from './winston-config';
 
 @Injectable()
 export class Logger {
-  constructor(@Inject(WINSTON_LOGGER) private winstonLogger: WinstonLogger) {}
+  private winstonLogger = winston.createLogger(WinstonConfig);
 
   log(
+    level: Level,
     message: string,
-    infoObj: Omit<Logform.TransformableInfo, 'message'> & {
-      level: Level;
-    },
+    infoObj: Omit<Logform.TransformableInfo, 'message'>,
   ) {
-    const { level, ...info } = infoObj;
-    this.winstonLogger.log(level, message, info);
+    this.winstonLogger.log(level, message, infoObj);
   }
 }

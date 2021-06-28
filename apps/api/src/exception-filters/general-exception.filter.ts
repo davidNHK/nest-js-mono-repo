@@ -6,16 +6,15 @@ import {
   ExceptionFilter,
   HttpException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 
 import { err } from '../modules/logger/formats/err';
-import { Logger } from '../modules/logger/logger';
-import { Level } from '../modules/logger/logging.constants';
 
 @Catch()
 export class GeneralExceptionFilter implements ExceptionFilter {
-  constructor(private accessLogger: Logger) {}
+  private logger = new Logger(GeneralExceptionFilter.name);
 
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -51,19 +50,22 @@ export class GeneralExceptionFilter implements ExceptionFilter {
     // https://docs.nestjs.com/faq/request-lifecycle
     response.status(status).json(body);
 
-    this.accessLogger.log(`access log`, {
-      duration: end - startAt,
-      err: err(httpException),
-      http: http(
-        {
-          ...request,
-        } as any,
-        {
-          ...response,
-          body,
-        } as any,
-      ),
-      level: Level.error,
-    });
+    this.logger.error(
+      {
+        duration: end - startAt,
+        err: err(httpException),
+        http: http(
+          {
+            ...request,
+          } as any,
+          {
+            ...response,
+            body,
+          } as any,
+        ),
+        message: 'Access Log',
+      },
+      exception.stack,
+    );
   }
 }
