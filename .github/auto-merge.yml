@@ -1,3 +1,2 @@
 - match:
-    dependency_type: development
     update_type: all
