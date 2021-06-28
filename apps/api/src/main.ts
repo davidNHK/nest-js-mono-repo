@@ -1,4 +1,6 @@
 import { FindApplicationService } from '@api/modules/application/services/find-application.service';
+import { Logger } from '@api/modules/logger/logger';
+import { NestLogger } from '@api/modules/logger/nest-logger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
@@ -10,7 +12,9 @@ import { BadRequestException } from './exceptions/BadRequestException';
 import { ErrorCode } from './exceptions/ErrorCode';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new NestLogger(new Logger()),
+  });
   app.enableCors(async (req, callback) => {
     if (!req.headers.origin) return callback(null, { origin: true });
     const appName = req.headers['X-Client-Application'];
@@ -44,6 +48,8 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
   const config = app.get(ConfigService);
+  const logger = app.get(NestLogger);
+  app.useLogger(logger);
   const options = new DocumentBuilder()
     .setTitle('Promotion API')
     .setDescription('promotion related API')
