@@ -93,7 +93,7 @@ describe('LoggingInterceptor', () => {
     await loggingInterceptor
       .intercept(executionContextSpy, callHandlerSpy)
       .toPromise();
-    expect(ApiLoggerSpy.log).toHaveBeenCalledWith('request success with 200', {
+    expect(ApiLoggerSpy.log).toHaveBeenCalledWith('access log', {
       duration: expect.any(Number),
       http: {
         method: 'GET',
