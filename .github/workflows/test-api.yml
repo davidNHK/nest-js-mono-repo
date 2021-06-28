@@ -17,4 +17,3 @@ jobs:
       - run: bash ./scripts/setup.sh
       - run: npx lerna run --stream --scope=api lint
       - run: npx lerna run --stream --scope=api test:ci
-      - run: npx lerna run --stream --scope=api test:e2e:ci
