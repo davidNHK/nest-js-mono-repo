@@ -28,7 +28,13 @@ export class NestLogger implements LoggerService {
   }
 
   error(infoObj: Logform.TransformableInfo, trace?: string, context?: string) {
-    this.logMessage(Level.error, { ...infoObj, trace }, context);
+    this.logMessage(
+      Level.error,
+      isInfoObj(infoObj)
+        ? { ...infoObj, trace }
+        : { level: Level.error, message: infoObj, trace },
+      context,
+    );
   }
 
   log(infoObj: Logform.TransformableInfo, context?: string) {
