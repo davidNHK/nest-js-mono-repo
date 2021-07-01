@@ -18,6 +18,18 @@ const configSchema = convict({
     env: 'NODE_ENV',
     format: ['test', 'development', 'production'],
   },
+  oidp: {
+    audience: {
+      default: null,
+      env: 'OIDP_AUDIENCE',
+      format: String,
+    },
+    domain: {
+      default: null,
+      env: 'OIDP_DOMAIN',
+      format: String,
+    },
+  },
   port: {
     default: null,
     env: 'PORT',

@@ -54,6 +54,7 @@ async function bootstrap() {
     .setTitle('Promotion API')
     .setDescription('promotion related API')
     .setVersion('1.0')
+    .addBearerAuth()
     .addSecurity('app-server-name', {
       in: 'header',
       name: 'X-APP',
