@@ -15,7 +15,7 @@ const config: Config.InitialOptions = {
     '@api/(.*)': '<rootDir>/src/$1',
   },
   rootDir: '.',
-  testEnvironment: '<rootDir>/test/helpers/e2e-test-environment.js',
+  testEnvironment: '<rootDir>/test/helpers/e2e-test-environment.ts',
   testRegex: '.*.spec.ts$',
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',

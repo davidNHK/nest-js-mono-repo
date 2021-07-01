@@ -1,11 +1,9 @@
-const { createConnection } = require('typeorm');
-
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
+import NodeEnvironment from 'jest-environment-node';
+import path from 'path';
+import { createConnection } from 'typeorm';
 
 dotenv.config({ path: '.env.test' });
-
-const NodeEnvironment = require('jest-environment-node');
-const path = require('path');
 
 function generateTestId(testPath) {
   const { name, dir } = path.parse(path.relative(process.cwd(), testPath));
@@ -27,17 +25,18 @@ async function setupDB(testId) {
     type: 'postgres',
     url: process.env.DATABASE_CONNECTION_URL,
   });
-  const schema = `e2e-test_${testId}`;
+  const schema = `e2e-${testId}`;
   await conn.query(`CREATE SCHEMA IF NOT EXISTS "${schema}"`);
   await conn.close();
   return schema;
 }
 
 class E2ETestEnvironment extends NodeEnvironment {
+  private readonly testPath: string;
+
   constructor(config, context) {
     super(config);
     this.testPath = context.testPath;
-    this.docblockPragmas = context.docblockPragmas;
   }
 
   async setup() {
