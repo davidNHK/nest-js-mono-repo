@@ -1,10 +1,10 @@
 import { HealthModule } from '@api/modules/health/health.module';
+import { expectResponseCode } from '@api-test-helpers/expect-response-code';
+import { withNestAppE2eContext } from '@api-test-helpers/with-nest-app-e2e-context';
 
 import { createRequestAgent } from '../helpers/createRequestAgent';
-import { expectResponseCode } from '../helpers/expectResponseCode';
-import { withNestAppE2EContext } from '../helpers/withNestAppE2EContext';
 
-const appContext = withNestAppE2EContext({
+const appContext = withNestAppE2eContext({
   imports: [HealthModule],
 });
 describe('HealthModule (e2e)', () => {

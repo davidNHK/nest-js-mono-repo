@@ -1,7 +1,7 @@
 import { CouponModule } from '@api/modules/coupon/coupon.module';
 import { DiscountType } from '@api/modules/coupon/entities/coupon.entity';
 import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
-import { expectResponseCode } from '@api-test-helpers/expectResponseCode';
+import { expectResponseCode } from '@api-test-helpers/expect-response-code';
 import {
   applicationBuilder,
   createApplicationInDB,
@@ -10,9 +10,9 @@ import {
   couponBuilder,
   createCouponInDB,
 } from '@api-test-helpers/seeders/coupons';
-import { withNestAppE2EContext } from '@api-test-helpers/withNestAppE2EContext';
+import { withNestAppE2eContext } from '@api-test-helpers/with-nest-app-e2e-context';
 
-const appContext = withNestAppE2EContext({
+const appContext = withNestAppE2eContext({
   imports: [CouponModule],
 });
 describe('GET /client/v1/coupons/:code/validate', () => {
