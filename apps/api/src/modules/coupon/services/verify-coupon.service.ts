@@ -1,5 +1,4 @@
 import type {
-  Customer,
   Order,
   VerifyCouponBodyDto,
   VerifyCouponParamsDto,
@@ -8,38 +7,59 @@ import {
   Coupon,
   DiscountType,
 } from '@api/modules/coupon/entities/coupon.entity';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createHmac } from 'crypto';
-import { In, LessThan, MoreThanOrEqual, Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
+import { v4 } from 'uuid';
 
+import { InConsistentTrackingIdException } from '../exceptions/InConsistentTrackingIdException';
 import { UnknownCouponCodeException } from '../exceptions/UnknownCouponCodeException';
 
 export class VerifyCouponService {
   constructor(
     @InjectRepository(Coupon) private couponRepository: Repository<Coupon>,
+    private config: ConfigService,
   ) {}
 
   async verifyCoupon(payload: VerifyCouponBodyDto & VerifyCouponParamsDto) {
-    const now = new Date();
+    const trackingIdSecrets = this.config.get('secret.trackingID');
+    if (!compareTrackingId(trackingIdSecrets, payload))
+      throw new InConsistentTrackingIdException({
+        errors: ['TrackingId mismatch'],
+        meta: {
+          payload,
+        },
+      });
     const products = payload.order.items.map(item => item.productId);
     const coupon = await this.couponRepository
-      .findOneOrFail({
-        active: true,
+      .createQueryBuilder('coupon')
+      .where('active = true')
+      .andWhere('code = :code')
+      .andWhere(
+        new Brackets(qb =>
+          qb.where('end_date IS NULL').orWhere('end_date >= NOW()'),
+        ),
+      )
+      .andWhere('product IN (:...productIds)')
+      .andWhere('start_date <= NOW()')
+      .setParameters({
         code: payload.code,
-        endDate: MoreThanOrEqual(now),
-        product: In(products),
-        startDate: LessThan(now),
+        productIds: products,
       })
-      .catch(() => {
+      .printSql()
+      .getOneOrFail()
+      .catch(err => {
         throw new UnknownCouponCodeException({
+          debugDetails: { err },
           errors: ['coupon code not found'],
           meta: {
-            now,
             payload,
             products,
           },
         });
       });
+
     const discountAmount = computeDiscountForOrder(coupon, payload.order);
     return {
       amountOff: coupon.amountOff,
@@ -52,9 +72,12 @@ export class VerifyCouponService {
         totalDiscountAmount: discountAmount,
       },
       percentOff: coupon.percentOff,
+      sessionId: v4(),
       trackingId: computeTrackingId({
         coupon,
         customer: payload.customer,
+        order: payload.order,
+        secretKey: trackingIdSecrets[0],
       }),
       valid: true,
     };
@@ -67,7 +90,7 @@ function computeDiscountForOrder(coupon: Coupon, order: Order) {
     // From business requirement, it should alway integer amount
     return Math.floor(discount / 100) * 100;
   } else if (coupon.discountType === DiscountType.Amount) {
-    return order.amount - coupon.amountOff;
+    return coupon.amountOff;
   }
   return 0;
 }
@@ -75,11 +98,37 @@ function computeDiscountForOrder(coupon: Coupon, order: Order) {
 function computeTrackingId({
   coupon,
   customer,
+  order,
+  secretKey,
 }: {
-  coupon: Coupon;
-  customer: Customer;
+  coupon: { code: string };
+  customer: { id: string };
+  order: { amount: number; id: string };
+  secretKey: string;
 }) {
-  return createHmac('SHA256', 'fake-key')
-    .update(`${customer.id}/${coupon.code}`)
+  return createHmac('SHA256', secretKey)
+    .update(`${customer.id}/${order.id}/${coupon.code}/${order.amount}`)
     .digest('hex');
+}
+
+function compareTrackingId(
+  secretKeys: string[],
+  payload: VerifyCouponBodyDto & VerifyCouponParamsDto,
+) {
+  if (payload.trackingId) {
+    const givenTrackingId = payload.trackingId;
+    return (
+      secretKeys
+        .map(key =>
+          computeTrackingId({
+            coupon: { code: payload.code },
+            customer: { id: payload.customer.id },
+            order: { amount: payload.order.amount, id: payload.order.id },
+            secretKey: key,
+          }),
+        )
+        .find(id => id === givenTrackingId) !== undefined
+    );
+  }
+  return true;
 }

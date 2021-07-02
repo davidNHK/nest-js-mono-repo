@@ -12,9 +12,16 @@ function generateTestId(testPath) {
     .join(dir, name.replace(/\.(e2e-spec|spec)$/, ''))
     .replace(/[/\\. "$]+/g, '-');
 
-  const maxLength = 40;
+  // https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
+  const maxLength = 63 - 4;
   if (suffix.length >= maxLength) {
-    return suffix.slice(-maxLength).replace(/^./, '-').toLowerCase();
+    return suffix
+      .slice(-maxLength)
+      .replace(/^./, '-')
+      .toLowerCase()
+      .split('-')
+      .filter(i => i.length > 0)
+      .join('-');
   }
   return suffix.toLowerCase();
 }
@@ -25,7 +32,7 @@ async function setupDB(testId) {
     type: 'postgres',
     url: process.env.DATABASE_CONNECTION_URL,
   });
-  const schema = `e2e-${testId}`;
+  const schema = `e2e_${testId}`;
   await conn.query(`CREATE SCHEMA IF NOT EXISTS "${schema}"`);
   await conn.close();
   return schema;

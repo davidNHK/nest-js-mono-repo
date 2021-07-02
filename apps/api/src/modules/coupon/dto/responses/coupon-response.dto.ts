@@ -24,7 +24,7 @@ export class CouponResponseDto {
 
   @Expose()
   @Type(() => Date)
-  endDate!: Date;
+  endDate?: Date;
 
   @Expose()
   discountType: DiscountType;

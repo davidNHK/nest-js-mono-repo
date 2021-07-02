@@ -42,7 +42,8 @@ export class CouponRequestDto {
   @MinDate(new Date())
   @IsDate()
   @Type(() => Date)
-  endDate!: Date;
+  @IsOptional()
+  endDate?: Date;
 
   @IsEnum(DiscountType)
   discountType: DiscountType;
