@@ -25,4 +25,4 @@ services:
       - REDIS_HOST=redis://dev-redis:6379
     ports:
       - "5333:5333"
-    entrypoint: "npx lerna run --scope promotion-service-api start:prod"
+    entrypoint: "npx lerna run --scope api start:prod"

@@ -23,4 +23,4 @@ services:
     environment:
       - DATABASE_CONNECTION_URL=postgres://${USER}:dev@migration-db:5432/dev
       - REDIS_HOST=redis://migration-redis:6379
-    entrypoint: "npx lerna run --scope promotion-service-api migration:up"
+    entrypoint: "npx lerna run --scope api migration:up"
