@@ -60,6 +60,7 @@ describe('POST /v1/coupons', () => {
       amountOff: 10,
       code: 'code',
       discountType: DiscountType.Amount,
+      endDate: new Date(),
     });
     const { body } = await createRequestAgent(app.getHttpServer())
       .post('/v1/coupons')

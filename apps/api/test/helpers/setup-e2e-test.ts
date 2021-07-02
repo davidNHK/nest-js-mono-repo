@@ -16,7 +16,7 @@ export default async function globalSetup() {
   });
   const records = await conn.query(`SELECT schema_name
 FROM information_schema.schemata
-WHERE "schema_name" LIKE 'e2e-test_%';`);
+WHERE "schema_name" LIKE 'e2e_%';`);
   const schemaNames = records.map(record => record.schema_name);
   await Promise.all(
     schemaNames

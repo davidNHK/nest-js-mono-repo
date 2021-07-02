@@ -1,6 +1,16 @@
 import convict from 'convict';
 import path from 'path';
 
+convict.addFormat({
+  coerce(val: any): any {
+    return val.split(',');
+  },
+  name: 'comma-separated-value',
+  validate: function (sources) {
+    return Array.isArray(sources) && sources.length > 0;
+  },
+});
+
 const configSchema = convict({
   database: {
     connectionURL: {
@@ -40,6 +50,13 @@ const configSchema = convict({
       default: null,
       env: 'REDIS_HOST',
       format: String,
+    },
+  },
+  secret: {
+    trackingID: {
+      default: null,
+      env: 'SECRET_TRACKING_ID',
+      format: 'comma-separated-value',
     },
   },
 });

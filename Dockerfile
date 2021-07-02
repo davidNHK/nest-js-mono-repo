@@ -1,23 +1,24 @@
 # Builder Stage
-FROM node:14-alpine AS builder
-WORKDIR /prmotion-service
+FROM node:14.17.1-alpine3.11 AS builder
 
-COPY package.json lerna.json package-lock.json ./
-COPY apps/api/ ./apps/api/
+WORKDIR /usr/src/prmotion-service
 
-RUN npm ci --ignore-scripts
-RUN npx lerna bootstrap -- --ignore-scripts
-RUN npx lerna run --stream build
+COPY . ./
+
+RUN npm ci --ignore-scripts && \
+    npx lerna bootstrap -- --ignore-scripts && \
+    npx lerna run --stream build
 
 # Run stage
-FROM node:14-alpine
-WORKDIR /prmotion-service
+FROM node:14.17.1-alpine3.11
+
+WORKDIR /usr/src/prmotion-service
 
 COPY package.json package-lock.json lerna.json ./
-RUN npm ci --ignore-scripts --production
+
+RUN apk add dumb-init
 
 # COPY content api node_modules and package json, built file
-COPY --from=builder /prmotion-service/apps/api/ ./apps/api/
+COPY --from=builder /usr/src/prmotion-service/apps/api/ ./apps/api/
 
-RUN npx lerna exec --concurrency 1 --stream -- "rm -rf node_modules"
-RUN npx lerna bootstrap -- --ignore-scripts --production
+USER node

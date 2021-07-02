@@ -22,7 +22,6 @@ export async function createCouponInDB(
 export function couponBuilder(override?: Partial<CreateCouponBodyDto>): any {
   const now = DateTime.now();
   const result = {
-    endDate: now.plus({ month: 1 }).startOf('month').toJSDate(),
     metadata: {},
     product: 'template',
     startDate: now.startOf('month').toJSDate(),

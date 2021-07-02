@@ -90,34 +90,90 @@ describe('POST /v1/coupons/:code/validate', () => {
     },
   );
 
-  it.each(['WWW', 'XYZ'])(
-    'POST https://promotion.neatcommerce.com/v1/coupon/:code/validate report %s invalid',
-    async code => {
-      const app = appContext.app;
+  it('Will check trackingId in payload if given', async () => {
+    const app = appContext.app;
+    await createCouponInDB(appContext.module, [
+      couponBuilder({
+        active: true,
+        code: 'FooBar!',
+        discountType: DiscountType.Percent,
+        percentOff: 25,
+        product: 'incorporation',
+      }),
+    ]);
+    const { body } = await createRequestAgent(app.getHttpServer())
+      .post(`/v1/coupons/FooBar!/validate`)
+      .send({
+        application: application.name,
+        customer: {
+          id: 'fake-id',
+        },
+        order: {
+          amount: 65000,
+          id: 'order-id',
+          items: [
+            {
+              price: 65000,
+              productId: 'incorporation',
+              quantity: 1,
+            },
+          ],
+        },
+      })
+      .set('X-App', application.name)
+      .set('X-App-Token', application.server_secret_key[0])
+      .expect(expectResponseCode({ expectedStatusCode: 200 }));
+    const { body: checkResult } = await createRequestAgent(app.getHttpServer())
+      .post(`/v1/coupons/FooBar!/validate`)
+      .send({
+        application: application.name,
+        customer: {
+          id: 'fake-id',
+        },
+        order: {
+          amount: 650,
+          id: 'order-id',
+          items: [
+            {
+              price: 65000,
+              productId: 'incorporation',
+              quantity: 1,
+            },
+          ],
+        },
+        trackingId: body.data.trackingId,
+      })
+      .set('X-App', application.name)
+      .set('X-App-Token', application.server_secret_key[0])
+      .expect(expectResponseCode({ expectedStatusCode: 400 }));
+    expect(checkResult.errors).toStrictEqual(['TrackingId mismatch']);
+  });
 
-      const { body } = await createRequestAgent(app.getHttpServer())
-        .post(`/v1/coupons/${code}/validate`)
-        .send({
-          application: application.name,
-          customer: {
-            id: 'fake-id',
-          },
-          order: {
-            amount: 65000,
-            id: 'order-id',
-            items: [
-              {
-                price: 65000,
-                productId: 'incorporation',
-                quantity: 1,
-              },
-            ],
-          },
-        })
-        .set('X-App', application.name)
-        .set('X-App-Token', application.server_secret_key[0])
-        .expect(expectResponseCode({ expectedStatusCode: 400 }));
-      expect(body.code).toStrictEqual('ERR_UNKNOWN_COUPON_CODE');
-    },
-  );
+  it.each(['WWW', 'XYZ'])('report %s invalid', async code => {
+    const app = appContext.app;
+
+    const { body } = await createRequestAgent(app.getHttpServer())
+      .post(`/v1/coupons/${code}/validate`)
+      .send({
+        application: application.name,
+        customer: {
+          id: 'fake-id',
+        },
+        order: {
+          amount: 65000,
+          id: 'order-id',
+          items: [
+            {
+              price: 65000,
+              productId: 'incorporation',
+              quantity: 1,
+            },
+          ],
+        },
+      })
+      .set('X-App', application.name)
+      .set('X-App-Token', application.server_secret_key[0])
+      .expect(expectResponseCode({ expectedStatusCode: 400 }));
+    expect(body.code).toStrictEqual('ERR_UNKNOWN_COUPON_CODE');
+  });
 });

@@ -1,5 +1,6 @@
 import { VerifyCouponService } from '@api/modules/coupon/services/verify-coupon.service';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ApplicationModule } from '../application/application.module';
@@ -11,7 +12,11 @@ import { FindManyCouponService } from './services/find-many-coupon.service';
 
 @Module({
   controllers: [CouponController, ClientCouponController],
-  imports: [TypeOrmModule.forFeature([Coupon]), ApplicationModule],
+  imports: [
+    TypeOrmModule.forFeature([Coupon]),
+    ApplicationModule,
+    ConfigModule,
+  ],
   providers: [CreateCouponService, FindManyCouponService, VerifyCouponService],
 })
 export class CouponModule {}

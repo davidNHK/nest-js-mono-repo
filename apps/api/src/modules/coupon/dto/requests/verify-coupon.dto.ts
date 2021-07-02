@@ -2,6 +2,7 @@ import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsNumber,
+  IsOptional,
   IsString,
   Min,
   ValidateNested,
@@ -53,6 +54,10 @@ export class VerifyCouponBodyDto {
   @Type(() => Order)
   @ValidateNested()
   order: Order;
+
+  @IsString()
+  @IsOptional()
+  trackingId?: string;
 }
 
 export class ClientVerifyCouponQueryDto {

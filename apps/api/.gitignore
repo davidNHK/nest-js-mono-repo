@@ -10,3 +10,4 @@ coverage/
 test/coverage/
 
 .test-app.log
+.env

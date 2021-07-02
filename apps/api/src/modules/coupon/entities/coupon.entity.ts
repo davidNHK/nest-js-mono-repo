@@ -38,9 +38,10 @@ export class Coupon {
   startDate: Date;
 
   @Column({
+    nullable: true,
     type: 'timestamp without time zone',
   })
-  endDate: Date;
+  endDate?: Date;
 
   @Column({
     enum: DiscountType,
