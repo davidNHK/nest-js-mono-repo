@@ -1,12 +1,12 @@
-import { ApplicationModule } from '@api/modules/application/application.module';
+import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
+import { withNestServerContext } from '@api-test-helpers/nest-app-context';
 import { signFakedToken } from '@api-test-helpers/sign-faked-token';
-import { withNestAppE2eContext } from '@api-test-helpers/with-nest-app-e2e-context';
 import { v4 } from 'uuid';
 
-import { createRequestAgent } from '../helpers/createRequestAgent';
+import { ApplicationModule } from '../application.module';
 
-const appContext = withNestAppE2eContext({
+const appContext = withNestServerContext({
   imports: [ApplicationModule],
 });
 describe('POST /v1/applications', () => {

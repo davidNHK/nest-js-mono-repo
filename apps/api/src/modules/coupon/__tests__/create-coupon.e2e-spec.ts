@@ -1,17 +1,17 @@
 import { ErrorCode } from '@api/exceptions/ErrorCode';
-import { CouponModule } from '@api/modules/coupon/coupon.module';
-import { DiscountType } from '@api/modules/coupon/entities/coupon.entity';
+import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
-import { withNestAppE2eContext } from '@api-test-helpers/with-nest-app-e2e-context';
-
-import { createRequestAgent } from '../helpers/createRequestAgent';
+import { withNestServerContext } from '@api-test-helpers/nest-app-context';
 import {
   applicationBuilder,
   createApplicationInDB,
-} from '../helpers/seeders/applications';
-import { couponBuilder } from '../helpers/seeders/coupons';
+} from '@api-test-helpers/seeders/applications';
+import { couponBuilder } from '@api-test-helpers/seeders/coupons';
 
-const appContext = withNestAppE2eContext({
+import { CouponModule } from '../coupon.module';
+import { DiscountType } from '../entities/coupon.entity';
+
+const appContext = withNestServerContext({
   imports: [CouponModule],
 });
 describe('POST /v1/coupons', () => {
