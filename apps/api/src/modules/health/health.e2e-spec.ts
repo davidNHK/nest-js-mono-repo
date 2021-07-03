@@ -1,13 +1,13 @@
-import { HealthModule } from '@api/modules/health/health.module';
+import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
-import { withNestAppE2eContext } from '@api-test-helpers/with-nest-app-e2e-context';
+import { withNestServerContext } from '@api-test-helpers/nest-app-context';
 
-import { createRequestAgent } from '../helpers/createRequestAgent';
+import { HealthModule } from './health.module';
 
-const appContext = withNestAppE2eContext({
+const appContext = withNestServerContext({
   imports: [HealthModule],
 });
-describe('HealthModule (e2e)', () => {
+describe('GET /healthz', () => {
   it('/healthz (GET)', async () => {
     const app = appContext.app;
     const { body } = await createRequestAgent(app.getHttpServer())

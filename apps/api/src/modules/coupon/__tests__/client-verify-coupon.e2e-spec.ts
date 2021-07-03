@@ -1,7 +1,7 @@
-import { CouponModule } from '@api/modules/coupon/coupon.module';
-import { DiscountType } from '@api/modules/coupon/entities/coupon.entity';
 import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
+import { getTestName } from '@api-test-helpers/jest/get-test-name';
+import { withNestServerContext } from '@api-test-helpers/nest-app-context';
 import {
   applicationBuilder,
   createApplicationInDB,
@@ -10,21 +10,14 @@ import {
   couponBuilder,
   createCouponInDB,
 } from '@api-test-helpers/seeders/coupons';
-import { withNestAppE2eContext } from '@api-test-helpers/with-nest-app-e2e-context';
 
-const appContext = withNestAppE2eContext({
+import { CouponModule } from '../coupon.module';
+import { DiscountType } from '../entities/coupon.entity';
+
+const appContext = withNestServerContext({
   imports: [CouponModule],
 });
 describe('GET /client/v1/coupons/:code/validate', () => {
-  let application;
-  beforeAll(async () => {
-    const [applicationInDB] = await createApplicationInDB(appContext.module, [
-      applicationBuilder({
-        name: 'sign-up',
-      }),
-    ]);
-    application = applicationInDB;
-  });
   it.each`
     couponCode   | percent | amount   | deductedAmount
     ${'NCORP25'} | ${25}   | ${65000} | ${48800}
@@ -33,6 +26,11 @@ describe('GET /client/v1/coupons/:code/validate', () => {
     '$couponCode coupon should valid and deduct amount from $deductedAmount to $amount',
     async ({ couponCode, percent, amount, deductedAmount }) => {
       const { app } = appContext;
+      const [application] = await createApplicationInDB(appContext.module, [
+        applicationBuilder({
+          name: getTestName(),
+        }),
+      ]);
       await createCouponInDB(appContext.module, [
         couponBuilder({
           active: true,
@@ -92,7 +90,11 @@ describe('GET /client/v1/coupons/:code/validate', () => {
 
   it.each(['WWW', 'XYZ'])('report %s invalid', async code => {
     const app = appContext.app;
-
+    const [application] = await createApplicationInDB(appContext.module, [
+      applicationBuilder({
+        name: getTestName(),
+      }),
+    ]);
     const { body } = await createRequestAgent(app.getHttpServer())
       .get(`/client/v1/coupons/${code}/validate`)
       .query({

@@ -1,16 +1,19 @@
-import { CouponModule } from '@api/modules/coupon/coupon.module';
-import { DiscountType } from '@api/modules/coupon/entities/coupon.entity';
+import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
+import { withNestServerContext } from '@api-test-helpers/nest-app-context';
 import {
   applicationBuilder,
   createApplicationInDB,
 } from '@api-test-helpers/seeders/applications';
-import { withNestAppE2eContext } from '@api-test-helpers/with-nest-app-e2e-context';
+import {
+  couponBuilder,
+  createCouponInDB,
+} from '@api-test-helpers/seeders/coupons';
 
-import { createRequestAgent } from '../helpers/createRequestAgent';
-import { couponBuilder, createCouponInDB } from '../helpers/seeders/coupons';
+import { CouponModule } from '../coupon.module';
+import { DiscountType } from '../entities/coupon.entity';
 
-const appContext = withNestAppE2eContext({
+const appContext = withNestServerContext({
   imports: [CouponModule],
 });
 describe('GET /v1/coupons', () => {

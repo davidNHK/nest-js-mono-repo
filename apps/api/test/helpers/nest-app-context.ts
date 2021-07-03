@@ -117,7 +117,7 @@ export async function createTestServer(moduleMetadata: ModuleMetadata) {
   };
 }
 
-export function withNestAppE2eContext(
+export function withNestServerContext(
   moduleMetadata: ModuleMetadata,
 ): AppContext {
   // @ts-expect-error context need assign on beforeAll hooks and must available
