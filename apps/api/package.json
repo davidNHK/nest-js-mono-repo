@@ -51,7 +51,7 @@
     "@types/ramda": "0.27.42",
     "@types/serialize-error": "4.0.1",
     "@types/supertest": "2.0.11",
-    "eslint": "7.29.0",
+    "eslint": "7.30.0",
     "jest": "27.0.6",
     "jest-environment-node": "27.0.6",
     "supertest": "6.1.3",
