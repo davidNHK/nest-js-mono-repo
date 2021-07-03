@@ -16,6 +16,7 @@ import { getEnvFilePath } from './config/getEnvFilePath';
 import { RequestIdMiddleware } from './middlewares/request-id.middleware';
 import { RequestStartTimeMiddleware } from './middlewares/request-start-time.middleware';
 import { CouponModule } from './modules/coupon/coupon.module';
+import { RedemptionModule } from './modules/redemption/redemption.module';
 
 @Module({
   imports: [
@@ -42,8 +43,9 @@ import { CouponModule } from './modules/coupon/coupon.module';
     RedisModule.forRootAsync(),
     TerminusModule,
     HealthModule,
-    CouponModule,
     ApplicationModule,
+    CouponModule,
+    RedemptionModule,
   ],
   providers: [
     {

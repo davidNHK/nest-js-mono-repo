@@ -146,7 +146,7 @@ describe('POST /v1/coupons/:code/validate', () => {
         },
         order: {
           amount: 650,
-          id: 'order-id',
+          id: 'fake-order-id',
           items: [
             {
               price: 65000,

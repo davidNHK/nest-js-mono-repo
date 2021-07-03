@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsDefined,
@@ -40,9 +40,6 @@ export class Order {
 
   @IsArray()
   @Type(() => OrderItem)
-  @Transform(({ value }) => (Array.isArray(value) ? value : [value]), {
-    toClassOnly: true,
-  })
   @ValidateNested()
   items: OrderItem[];
 
@@ -60,7 +57,7 @@ export class Customer {
   metadata?: Record<string, unknown>;
 }
 
-export class VerifyCouponBodyDto {
+export class RedeemCouponBodyDto {
   @IsDefined()
   @Type(() => Customer)
   @ValidateNested()
@@ -71,20 +68,12 @@ export class VerifyCouponBodyDto {
   @ValidateNested()
   order: Order;
 
-  @IsString()
-  trackingId: string;
-}
-
-export class ClientVerifyCouponBodyDto {
-  @IsOptional()
-  trackingId?: string;
-
   @IsOptional()
   @IsObject()
   metadata?: Record<string, unknown>;
 }
 
-export class VerifyCouponParamsDto {
+export class RedeemCouponParamsDto {
   @IsString()
   code: string;
 }

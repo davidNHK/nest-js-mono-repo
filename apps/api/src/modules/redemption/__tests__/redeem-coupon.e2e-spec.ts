@@ -20,14 +20,14 @@ describe('POST /v1/coupons/:code/redemption', () => {
         applicationBuilder({ name: getTestName() }),
       ]);
     const { body } = await createRequestAgent(app.getHttpServer())
-      .post('/v1/coupons/:code/redemption')
+      .post('/v1/coupons/fake-code/redemption')
       .send({
         endDate: new Date('2021-05-01T00:00:00Z'),
         startDate: new Date('2021-06-01T00:00:00Z'),
       })
       .set('X-App', name)
       .set('X-App-Token', serverSecretKey[0])
-      .expect(expectResponseCode({ expectedStatusCode: 201 }));
-    expect(body).toStrictEqual({});
+      .expect(expectResponseCode({ expectedStatusCode: 400 }));
+    expect(body.code).toStrictEqual('ERR_VALIDATION');
   });
 });
