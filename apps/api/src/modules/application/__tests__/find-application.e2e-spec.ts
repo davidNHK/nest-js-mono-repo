@@ -13,17 +13,17 @@ import { ApplicationModule } from '../application.module';
 const appContext = withNestServerContext({
   imports: [ApplicationModule],
 });
-describe('GET /v1/applications/:id', () => {
+describe('GET /admin/v1/applications/:id', () => {
   it('404 if id not found', async () => {
     const app = appContext.app;
 
     await createRequestAgent(app.getHttpServer())
-      .get(`/v1/applications/${v4()}`)
+      .get(`/admin/v1/applications/${v4()}`)
       .set('Authorization', signFakedToken(appContext.module))
       .expect(expectResponseCode({ expectedStatusCode: 404 }));
   });
 
-  it('Update application', async () => {
+  it('Get application', async () => {
     const app = appContext.app;
     const [createdApplication] = await createApplicationInDB(
       appContext.module,
@@ -31,7 +31,7 @@ describe('GET /v1/applications/:id', () => {
     );
 
     const { body } = await createRequestAgent(app.getHttpServer())
-      .get(`/v1/applications/${createdApplication.id}`)
+      .get(`/admin/v1/applications/${createdApplication.id}`)
       .set('Authorization', signFakedToken(appContext.module))
       .expect(expectResponseCode({ expectedStatusCode: 200 }));
     expect(body.data).toStrictEqual({

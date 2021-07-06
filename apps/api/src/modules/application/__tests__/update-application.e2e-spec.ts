@@ -23,7 +23,7 @@ describe('PATCH /v1/applications/:id', () => {
       serverSecretKey: [v4()],
     };
     await createRequestAgent(app.getHttpServer())
-      .patch(`/v1/applications/${v4()}`)
+      .patch(`/admin/v1/applications/${v4()}`)
       .set('Authorization', signFakedToken(appContext.module))
       .send(newConfig)
       .expect(expectResponseCode({ expectedStatusCode: 404 }));
@@ -41,7 +41,7 @@ describe('PATCH /v1/applications/:id', () => {
       serverSecretKey: [v4()],
     };
     const { body } = await createRequestAgent(app.getHttpServer())
-      .patch(`/v1/applications/${createdApplication.id}`)
+      .patch(`/admin/v1/applications/${createdApplication.id}`)
       .set('Authorization', signFakedToken(appContext.module))
       .send(newConfig)
       .expect(expectResponseCode({ expectedStatusCode: 200 }));

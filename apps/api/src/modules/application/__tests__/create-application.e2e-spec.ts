@@ -9,12 +9,12 @@ import { ApplicationModule } from '../application.module';
 const appContext = withNestServerContext({
   imports: [ApplicationModule],
 });
-describe('POST /v1/applications', () => {
+describe('POST /admin/v1/applications', () => {
   it('Create application', async () => {
     const app = appContext.app;
 
     const { body } = await createRequestAgent(app.getHttpServer())
-      .post('/v1/applications')
+      .post('/admin/v1/applications')
       .set('Authorization', signFakedToken(appContext.module))
       .send({
         clientSecretKey: [v4()],
