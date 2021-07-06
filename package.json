@@ -24,7 +24,7 @@
     "@commitlint/cli": "12.1.4",
     "@commitlint/config-lerna-scopes": "12.1.4",
     "commitlint": "12.1.4",
-    "husky": "7.0.0",
+    "husky": "7.0.1",
     "is-ci": "3.0.0",
     "lint-staged": "11.0.0",
     "markdownlint-cli2": "0.1.3",
