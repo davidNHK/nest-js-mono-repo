@@ -1,8 +1,8 @@
-import { DiscountType } from '@api/modules/coupon/entities/coupon.entity';
 import { couponBuilder } from '@api-test-helpers/seeders/coupons';
 import { plainToClass } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
+import { DiscountType } from '../../constants/discount-type.constants';
 import { CouponRequestDto } from './coupon-request.dto';
 
 describe('Test CouponDto', () => {

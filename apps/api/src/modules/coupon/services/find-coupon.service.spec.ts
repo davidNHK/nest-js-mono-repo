@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { In } from 'typeorm';
 
 import { Coupon } from '../entities/coupon.entity';
-import { FindManyCouponService } from './find-many-coupon.service';
+import { FindCouponService } from './find-coupon.service';
 
 describe('FindManyCouponService', () => {
   it('findManyCoupon', async () => {
@@ -12,7 +12,7 @@ describe('FindManyCouponService', () => {
     };
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        FindManyCouponService,
+        FindCouponService,
         {
           provide: getRepositoryToken(Coupon),
           useValue: mockRepository,
@@ -20,7 +20,7 @@ describe('FindManyCouponService', () => {
       ],
     }).compile();
 
-    const service = app.get<FindManyCouponService>(FindManyCouponService);
+    const service = app.get<FindCouponService>(FindCouponService);
     const filter = {
       limit: 10,
       products: ['abc', 'efg'],
@@ -44,7 +44,7 @@ describe('FindManyCouponService', () => {
     };
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        FindManyCouponService,
+        FindCouponService,
         {
           provide: getRepositoryToken(Coupon),
           useValue: mockRepository,
@@ -52,7 +52,7 @@ describe('FindManyCouponService', () => {
       ],
     }).compile();
 
-    const service = app.get<FindManyCouponService>(FindManyCouponService);
+    const service = app.get<FindCouponService>(FindCouponService);
     const filter = {
       application: 'mock-app-name',
       limit: 20,

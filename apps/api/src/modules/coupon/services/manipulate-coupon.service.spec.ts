@@ -3,27 +3,41 @@ import { UnprocessableEntityException } from '@api/exceptions/UnprocessableEntit
 import type { CouponRequestDto } from '@api/modules/coupon/dto/requests/coupon-request.dto';
 import { couponBuilder } from '@api-test-helpers/seeders/coupons';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import type { Repository } from 'typeorm';
 
-import { Coupon, DiscountType } from '../entities/coupon.entity';
-import { CreateCouponService } from './create-coupon.service';
+import { DiscountType } from '../constants/discount-type.constants';
+import type { Coupon } from '../entities/coupon.entity';
+import { CouponRepositoryFactory } from './coupon-repository.factory';
+import { ManipulateCouponService } from './manipulate-coupon.service';
 
-describe('CreateCouponService', () => {
+function createTestingModule({
+  getRepository,
+}: {
+  getRepository: ({ discountType: DiscountType }) => Repository<Coupon>;
+}) {
+  return Test.createTestingModule({
+    providers: [
+      ManipulateCouponService,
+      {
+        provide: CouponRepositoryFactory,
+        useValue: {
+          getRepository,
+        },
+      },
+    ],
+  }).compile();
+}
+
+describe('ManipulateCouponService', () => {
   it('createCoupon', async () => {
     const mockRepository = {
       save: jest.fn().mockResolvedValue({}),
     };
-    const app: TestingModule = await Test.createTestingModule({
-      providers: [
-        CreateCouponService,
-        {
-          provide: getRepositoryToken(Coupon),
-          useValue: mockRepository,
-        },
-      ],
-    }).compile();
+    const app: TestingModule = await createTestingModule({
+      getRepository: jest.fn().mockReturnValue(mockRepository),
+    });
 
-    const service = app.get<CreateCouponService>(CreateCouponService);
+    const service = app.get<ManipulateCouponService>(ManipulateCouponService);
     const payload = couponBuilder({
       amountOff: 10,
       code: 'fake-code',
@@ -40,17 +54,11 @@ describe('CreateCouponService', () => {
     const mockRepository = {
       save: jest.fn().mockRejectedValue({ code: '23505' }),
     };
-    const app: TestingModule = await Test.createTestingModule({
-      providers: [
-        CreateCouponService,
-        {
-          provide: getRepositoryToken(Coupon),
-          useValue: mockRepository,
-        },
-      ],
-    }).compile();
+    const app: TestingModule = await createTestingModule({
+      getRepository: jest.fn().mockReturnValue(mockRepository),
+    });
 
-    const service = app.get<CreateCouponService>(CreateCouponService);
+    const service = app.get<ManipulateCouponService>(ManipulateCouponService);
     const payload = couponBuilder({
       code: 'fake-code',
       discountType: DiscountType.Amount,
@@ -66,17 +74,11 @@ describe('CreateCouponService', () => {
     const mockRepository = {
       save: jest.fn().mockRejectedValue({ code: '23514' }),
     };
-    const app: TestingModule = await Test.createTestingModule({
-      providers: [
-        CreateCouponService,
-        {
-          provide: getRepositoryToken(Coupon),
-          useValue: mockRepository,
-        },
-      ],
-    }).compile();
+    const app: TestingModule = await createTestingModule({
+      getRepository: jest.fn().mockReturnValue(mockRepository),
+    });
 
-    const service = app.get<CreateCouponService>(CreateCouponService);
+    const service = app.get<ManipulateCouponService>(ManipulateCouponService);
     const payload = couponBuilder({
       code: 'fake-code',
       discountType: DiscountType.Amount,

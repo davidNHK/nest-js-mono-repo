@@ -1,20 +1,21 @@
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Brackets, Repository } from 'typeorm';
+import { v4 } from 'uuid';
+
 import type {
   Order,
   VerifyCouponBodyDto,
   VerifyCouponParamsDto,
-} from '@api/modules/coupon/dto/requests/verify-coupon.dto';
+} from '../dto/requests/verify-coupon.dto';
 import {
-  Coupon,
-  DiscountType,
-} from '@api/modules/coupon/entities/coupon.entity';
-import { ConfigService } from '@nestjs/config';
-import { InjectRepository } from '@nestjs/typeorm';
-import { createHmac } from 'crypto';
-import { Brackets, Repository } from 'typeorm';
-import { v4 } from 'uuid';
-
+  assertAmountDiscountCoupon,
+  assertPercentDiscountCoupon,
+} from '../entities/assert-coupon';
+import { Coupon } from '../entities/coupon.entity';
 import { InConsistentTrackingIdException } from '../exceptions/InConsistentTrackingIdException';
 import { UnknownCouponCodeException } from '../exceptions/UnknownCouponCodeException';
+import { computeTrackingId } from '../utils/computeTrackingId';
 
 export class VerifyCouponService {
   constructor(
@@ -47,7 +48,6 @@ export class VerifyCouponService {
         code: payload.code,
         productIds: products,
       })
-      .printSql()
       .getOneOrFail()
       .catch(err => {
         throw new UnknownCouponCodeException({
@@ -60,18 +60,18 @@ export class VerifyCouponService {
         });
       });
 
-    const discountAmount = computeDiscountForOrder(coupon, payload.order);
+    const discount = computeDiscountForOrder(coupon, payload.order);
     return {
-      amountOff: coupon.amountOff,
+      amountOff: discount.amountOff,
       code: payload.code,
       discountType: coupon.discountType,
       metadata: {},
       order: {
         ...payload.order,
-        totalAmount: payload.order.amount - discountAmount,
-        totalDiscountAmount: discountAmount,
+        totalAmount: payload.order.amount - discount.discount,
+        totalDiscountAmount: discount.discount,
       },
-      percentOff: coupon.percentOff,
+      percentOff: discount.percentOff,
       sessionId: v4(),
       trackingId: computeTrackingId({
         coupon,
@@ -85,30 +85,17 @@ export class VerifyCouponService {
 }
 
 function computeDiscountForOrder(coupon: Coupon, order: Order) {
-  if (coupon.discountType === DiscountType.Percent) {
+  if (assertPercentDiscountCoupon(coupon)) {
     const discount = Math.round(order.amount * (coupon.percentOff / 100));
-    // From business requirement, it should alway integer amount
-    return Math.floor(discount / 100) * 100;
-  } else if (coupon.discountType === DiscountType.Amount) {
-    return coupon.amountOff;
+    // From business requirement, it should always integer amount
+    return {
+      discount: Math.floor(discount / 100) * 100,
+      percentOff: coupon.percentOff,
+    };
+  } else if (assertAmountDiscountCoupon(coupon)) {
+    return { amountOff: coupon.amountOff, discount: coupon.amountOff };
   }
-  return 0;
-}
-
-function computeTrackingId({
-  coupon,
-  customer,
-  order,
-  secretKey,
-}: {
-  coupon: { code: string };
-  customer: { id: string };
-  order: { amount: number; id: string };
-  secretKey: string;
-}) {
-  return createHmac('SHA256', secretKey)
-    .update(`${customer.id}/${order.id}/${coupon.code}/${order.amount}`)
-    .digest('hex');
+  return { amountOff: 0, discount: 0 };
 }
 
 function compareTrackingId(
@@ -123,7 +110,7 @@ function compareTrackingId(
           computeTrackingId({
             coupon: { code: payload.code },
             customer: { id: payload.customer.id },
-            order: { amount: payload.order.amount, id: payload.order.id },
+            order: { id: payload.order.id },
             secretKey: key,
           }),
         )

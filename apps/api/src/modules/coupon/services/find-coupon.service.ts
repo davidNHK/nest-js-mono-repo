@@ -6,7 +6,7 @@ import type { FindManyCouponQueryDto } from '../dto/requests/find-many-coupon.dt
 import { Coupon } from '../entities/coupon.entity';
 
 @Injectable()
-export class FindManyCouponService {
+export class FindCouponService {
   constructor(
     @InjectRepository(Coupon) private couponRepository: Repository<Coupon>,
   ) {}
