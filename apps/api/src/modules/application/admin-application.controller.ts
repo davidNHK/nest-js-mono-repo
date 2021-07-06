@@ -12,9 +12,9 @@ import {
   UpdateApplicationParamsDto,
 } from './dto/requests/update-application.dto';
 
-@Controller('/v1')
+@Controller('/admin/v1')
 @ApiTags('Application')
-export class ApplicationController {
+export class AdminApplicationController {
   constructor(
     private manipulateApplicationService: ManipulateApplicationService,
     private findApplicationService: FindApplicationService,

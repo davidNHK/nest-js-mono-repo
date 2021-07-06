@@ -1,22 +1,36 @@
+import { DiscountType } from '@api/modules/coupon/constants/discount-type.constants';
 import type { CreateCouponBodyDto } from '@api/modules/coupon/dto/requests/create-coupon.dto';
-import { Coupon } from '@api/modules/coupon/entities/coupon.entity';
+import {
+  assertAmountDiscountCoupon,
+  assertPercentDiscountCoupon,
+} from '@api/modules/coupon/entities/assert-coupon';
+import type { Coupon } from '@api/modules/coupon/entities/coupon.entity';
+import { CouponRepositoryFactory } from '@api/modules/coupon/services/coupon-repository.factory';
 import type { TestingModule } from '@nestjs/testing';
 import { DateTime } from 'luxon';
-import { Connection } from 'typeorm';
 
 export async function createCouponInDB(
   testingModule: TestingModule,
   coupons: Partial<Coupon>[],
 ) {
-  const conn = testingModule.get<Connection>(Connection);
-  const createdCoupons = await conn
-    .createQueryBuilder()
-    .insert()
-    .into(Coupon)
-    .values(coupons)
-    .output('*')
-    .execute();
-  return createdCoupons.raw;
+  const repositoryFactory = testingModule.get<CouponRepositoryFactory>(
+    CouponRepositoryFactory,
+  );
+
+  const createdCoupons = await Promise.all(
+    Object.entries({
+      [DiscountType.Percent]: coupons.filter(coupon =>
+        assertPercentDiscountCoupon(<Coupon>coupon),
+      ),
+      [DiscountType.Amount]: coupons.filter(coupon =>
+        assertAmountDiscountCoupon(<Coupon>coupon),
+      ),
+    }).map(([discountType, records]) => {
+      // @ts-expect-error discountType is string
+      return repositoryFactory.getRepository({ discountType }).save(records);
+    }),
+  );
+  return createdCoupons.map(records => records).flat();
 }
 
 export function couponBuilder(override?: Partial<CreateCouponBodyDto>): any {

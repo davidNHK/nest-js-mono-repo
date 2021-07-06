@@ -1,5 +1,6 @@
-import { DiscountType } from '@api/modules/coupon/entities/coupon.entity';
 import { Exclude, Expose, Type } from 'class-transformer';
+
+import { DiscountType } from '../../constants/discount-type.constants';
 
 @Exclude()
 export class CouponResponseDto {

@@ -14,7 +14,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 
-import { DiscountType } from '../../entities/coupon.entity';
+import { DiscountType } from '../../constants/discount-type.constants';
 import { BeforeDate } from './validate/BeforeDate';
 
 export class CouponRequestDto {

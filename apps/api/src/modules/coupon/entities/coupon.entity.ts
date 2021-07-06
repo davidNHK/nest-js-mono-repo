@@ -3,18 +3,21 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  TableInheritance,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum DiscountType {
-  Amount = 'AMOUNT',
-  Percent = 'PERCENT',
-}
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { DiscountType } from '../constants/discount-type.constants';
 
 @Entity()
+@TableInheritance({
+  column: { enum: DiscountType, name: 'discount_type', type: 'enum' },
+})
 @Unique(['code'])
-export class Coupon {
+export abstract class Coupon {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,6 +29,12 @@ export class Coupon {
 
   @Column()
   active: boolean;
+
+  @Column({
+    insert: false,
+    update: false,
+  })
+  discountType: DiscountType;
 
   @Column({
     nullable: true,
@@ -42,17 +51,6 @@ export class Coupon {
     type: 'timestamp without time zone',
   })
   endDate?: Date;
-
-  @Column({
-    enum: DiscountType,
-  })
-  discountType: DiscountType;
-
-  @Column({ nullable: true })
-  percentOff?: number;
-
-  @Column({ nullable: true })
-  amountOff?: number;
 
   @Column({
     default: {},

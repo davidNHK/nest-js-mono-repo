@@ -11,8 +11,8 @@ import {
   createCouponInDB,
 } from '@api-test-helpers/seeders/coupons';
 
+import { DiscountType } from '../constants/discount-type.constants';
 import { CouponModule } from '../coupon.module';
-import { DiscountType } from '../entities/coupon.entity';
 
 const appContext = withNestServerContext({
   imports: [CouponModule],
@@ -42,8 +42,8 @@ describe('GET /client/v1/coupons/:code/validate', () => {
       ]);
 
       const { body } = await createRequestAgent(app.getHttpServer())
-        .get(`/client/v1/coupons/${couponCode}/validate`)
-        .query({
+        .post(`/client/v1/coupons/${couponCode}/validate`)
+        .send({
           customer: {
             id: 'fake-id',
           },
@@ -59,12 +59,10 @@ describe('GET /client/v1/coupons/:code/validate', () => {
             ],
           },
         })
-        .send()
         .set('x-client-application', application.name)
         .set('x-client-token', application.client_secret_key[0])
         .expect(expectResponseCode({ expectedStatusCode: 200 }));
       expect(body.data).toStrictEqual({
-        amountOff: null,
         code: couponCode,
         discountType: 'PERCENT',
         metadata: {},
@@ -96,9 +94,8 @@ describe('GET /client/v1/coupons/:code/validate', () => {
       }),
     ]);
     const { body } = await createRequestAgent(app.getHttpServer())
-      .get(`/client/v1/coupons/${code}/validate`)
-      .query({
-        application: application.name,
+      .post(`/client/v1/coupons/${code}/validate`)
+      .send({
         customer: {
           id: 'fake-id',
         },
@@ -114,7 +111,6 @@ describe('GET /client/v1/coupons/:code/validate', () => {
           ],
         },
       })
-      .send()
       .set('x-client-application', application.name)
       .set('x-client-token', application.client_secret_key[0])
       .expect(expectResponseCode({ expectedStatusCode: 400 }));

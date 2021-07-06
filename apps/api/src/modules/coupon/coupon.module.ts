@@ -4,19 +4,31 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ApplicationModule } from '../application/application.module';
-import { ClientCouponController } from './client-coupon.controller';
-import { CouponController } from './coupon.controller';
+import { AdminCouponController } from './admin-coupon.controller';
+import { AmountDiscountCoupon } from './entities/amount-discount-coupon.entity';
 import { Coupon } from './entities/coupon.entity';
-import { CreateCouponService } from './services/create-coupon.service';
-import { FindManyCouponService } from './services/find-many-coupon.service';
+import { PercentDiscountCoupon } from './entities/percent-discount-coupon.entity';
+import { PublicCouponController } from './public-coupon.controller';
+import { CouponRepositoryFactory } from './services/coupon-repository.factory';
+import { FindCouponService } from './services/find-coupon.service';
+import { ManipulateCouponService } from './services/manipulate-coupon.service';
 
 @Module({
-  controllers: [CouponController, ClientCouponController],
+  controllers: [AdminCouponController, PublicCouponController],
   imports: [
-    TypeOrmModule.forFeature([Coupon]),
+    TypeOrmModule.forFeature([
+      Coupon,
+      AmountDiscountCoupon,
+      PercentDiscountCoupon,
+    ]),
     ApplicationModule,
     ConfigModule,
   ],
-  providers: [CreateCouponService, FindManyCouponService, VerifyCouponService],
+  providers: [
+    CouponRepositoryFactory,
+    ManipulateCouponService,
+    FindCouponService,
+    VerifyCouponService,
+  ],
 })
 export class CouponModule {}

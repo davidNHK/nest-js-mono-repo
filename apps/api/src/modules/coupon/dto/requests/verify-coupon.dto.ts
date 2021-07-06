@@ -1,8 +1,8 @@
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsDefined,
   IsNumber,
-  IsOptional,
   IsString,
   Min,
   ValidateNested,
@@ -56,17 +56,18 @@ export class VerifyCouponBodyDto {
   order: Order;
 
   @IsString()
-  @IsOptional()
-  trackingId?: string;
+  trackingId: string;
 }
 
-export class ClientVerifyCouponQueryDto {
+export class ClientVerifyCouponBodyDto {
   @Type(() => Customer)
   @ValidateNested()
+  @IsDefined()
   customer: Customer;
 
   @Type(() => Order)
   @ValidateNested()
+  @IsDefined()
   order: Order;
 }
 

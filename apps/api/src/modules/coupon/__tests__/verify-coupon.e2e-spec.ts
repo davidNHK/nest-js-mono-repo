@@ -1,3 +1,4 @@
+import { computeTrackingId } from '@api/modules/coupon/utils/computeTrackingId';
 import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
 import { withNestServerContext } from '@api-test-helpers/nest-app-context';
@@ -9,9 +10,10 @@ import {
   couponBuilder,
   createCouponInDB,
 } from '@api-test-helpers/seeders/coupons';
+import { ConfigService } from '@nestjs/config';
 
+import { DiscountType } from '../constants/discount-type.constants';
 import { CouponModule } from '../coupon.module';
-import { DiscountType } from '../entities/coupon.entity';
 
 const appContext = withNestServerContext({
   imports: [CouponModule],
@@ -34,6 +36,7 @@ describe('POST /v1/coupons/:code/validate', () => {
     '$couponCode coupon should valid and deduct amount from $deductedAmount to $amount',
     async ({ couponCode, percent, amount, deductedAmount }) => {
       const { app } = appContext;
+      const config = app.get(ConfigService);
       await createCouponInDB(appContext.module, [
         couponBuilder({
           active: true,
@@ -47,7 +50,6 @@ describe('POST /v1/coupons/:code/validate', () => {
       const { body } = await createRequestAgent(app.getHttpServer())
         .post(`/v1/coupons/${couponCode}/validate`)
         .send({
-          application: application.name,
           customer: {
             id: 'fake-id',
           },
@@ -62,12 +64,23 @@ describe('POST /v1/coupons/:code/validate', () => {
               },
             ],
           },
+          trackingId: computeTrackingId({
+            coupon: {
+              code: couponCode,
+            },
+            customer: {
+              id: 'fake-id',
+            },
+            order: {
+              id: 'order-id',
+            },
+            secretKey: config.get('secret.trackingID')[0],
+          }),
         })
         .set('X-App', application.name)
         .set('X-App-Token', application.server_secret_key[0])
         .expect(expectResponseCode({ expectedStatusCode: 200 }));
       expect(body.data).toStrictEqual({
-        amountOff: null,
         code: couponCode,
         discountType: 'PERCENT',
         metadata: {},
@@ -91,8 +104,9 @@ describe('POST /v1/coupons/:code/validate', () => {
     },
   );
 
-  it('Will check trackingId in payload if given', async () => {
+  it('Can verify from client verify response', async () => {
     const app = appContext.app;
+
     await createCouponInDB(appContext.module, [
       couponBuilder({
         active: true,
@@ -103,9 +117,8 @@ describe('POST /v1/coupons/:code/validate', () => {
       }),
     ]);
     const { body } = await createRequestAgent(app.getHttpServer())
-      .post(`/v1/coupons/FooBar!/validate`)
+      .post(`/client/v1/coupons/FooBar!/validate`)
       .send({
-        application: application.name,
         customer: {
           id: 'fake-id',
         },
@@ -121,10 +134,10 @@ describe('POST /v1/coupons/:code/validate', () => {
           ],
         },
       })
-      .set('X-App', application.name)
-      .set('X-App-Token', application.server_secret_key[0])
+      .set('X-Client-application', application.name)
+      .set('X-Client-token', application.client_secret_key[0])
       .expect(expectResponseCode({ expectedStatusCode: 200 }));
-    const { body: checkResult } = await createRequestAgent(app.getHttpServer())
+    await createRequestAgent(app.getHttpServer())
       .post(`/v1/coupons/FooBar!/validate`)
       .send({
         application: application.name,
@@ -146,12 +159,12 @@ describe('POST /v1/coupons/:code/validate', () => {
       })
       .set('X-App', application.name)
       .set('X-App-Token', application.server_secret_key[0])
-      .expect(expectResponseCode({ expectedStatusCode: 400 }));
-    expect(checkResult.errors).toStrictEqual(['TrackingId mismatch']);
+      .expect(expectResponseCode({ expectedStatusCode: 200 }));
   });
 
   it.each(['WWW', 'XYZ'])('report %s invalid', async code => {
     const app = appContext.app;
+    const config = app.get(ConfigService);
 
     const { body } = await createRequestAgent(app.getHttpServer())
       .post(`/v1/coupons/${code}/validate`)
@@ -171,6 +184,18 @@ describe('POST /v1/coupons/:code/validate', () => {
             },
           ],
         },
+        trackingId: computeTrackingId({
+          coupon: {
+            code: code,
+          },
+          customer: {
+            id: 'fake-id',
+          },
+          order: {
+            id: 'order-id',
+          },
+          secretKey: config.get('secret.trackingID')[0],
+        }),
       })
       .set('X-App', application.name)
       .set('X-App-Token', application.server_secret_key[0])
