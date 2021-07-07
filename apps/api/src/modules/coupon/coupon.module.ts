@@ -12,9 +12,11 @@ import { PublicCouponController } from './public-coupon.controller';
 import { CouponRepositoryFactory } from './services/coupon-repository.factory';
 import { FindCouponService } from './services/find-coupon.service';
 import { ManipulateCouponService } from './services/manipulate-coupon.service';
+import { TrackingService } from './services/tracking.service';
 
 @Module({
   controllers: [AdminCouponController, PublicCouponController],
+  exports: [VerifyCouponService, FindCouponService],
   imports: [
     TypeOrmModule.forFeature([
       Coupon,
@@ -29,6 +31,7 @@ import { ManipulateCouponService } from './services/manipulate-coupon.service';
     ManipulateCouponService,
     FindCouponService,
     VerifyCouponService,
+    TrackingService,
   ],
 })
 export class CouponModule {}

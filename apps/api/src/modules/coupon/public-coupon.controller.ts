@@ -23,10 +23,9 @@ export class PublicCouponController {
     @Param() params: VerifyCouponParamsDto,
     @Body() body: ClientVerifyCouponBodyDto,
   ): Promise<VerifyCouponResponseDto> {
-    const verifiedResponse = await this.verifyCouponService.verifyCoupon({
+    const verifiedResponse = await this.verifyCouponService.clientVerifyCoupon({
       ...params,
       ...body,
-      trackingId: null,
     });
     return new VerifyCouponResponseDto(verifiedResponse);
   }

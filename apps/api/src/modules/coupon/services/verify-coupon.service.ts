@@ -1,9 +1,9 @@
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 
 import type {
+  ClientVerifyCouponBodyDto,
   Order,
   VerifyCouponBodyDto,
   VerifyCouponParamsDto,
@@ -15,23 +15,17 @@ import {
 import { Coupon } from '../entities/coupon.entity';
 import { InConsistentTrackingIdException } from '../exceptions/InConsistentTrackingIdException';
 import { UnknownCouponCodeException } from '../exceptions/UnknownCouponCodeException';
-import { computeTrackingId } from '../utils/computeTrackingId';
+import { TrackingService } from './tracking.service';
 
 export class VerifyCouponService {
   constructor(
     @InjectRepository(Coupon) private couponRepository: Repository<Coupon>,
-    private config: ConfigService,
+    private trackingService: TrackingService,
   ) {}
 
-  async verifyCoupon(payload: VerifyCouponBodyDto & VerifyCouponParamsDto) {
-    const trackingIdSecrets = this.config.get('secret.trackingID');
-    if (!compareTrackingId(trackingIdSecrets, payload))
-      throw new InConsistentTrackingIdException({
-        errors: ['TrackingId mismatch'],
-        meta: {
-          payload,
-        },
-      });
+  async clientVerifyCoupon(
+    payload: ClientVerifyCouponBodyDto & VerifyCouponParamsDto,
+  ) {
     const products = payload.order.items.map(item => item.productId);
     const coupon = await this.couponRepository
       .createQueryBuilder('coupon')
@@ -72,15 +66,75 @@ export class VerifyCouponService {
         totalDiscountAmount: discount.discount,
       },
       percentOff: discount.percentOff,
-      sessionId: v4(),
-      trackingId: computeTrackingId({
+      trackingId: this.trackingService.generateTrackingIds({
         coupon,
         customer: payload.customer,
         order: payload.order,
-        secretKey: trackingIdSecrets[0],
-      }),
+      })[0],
       valid: true,
     };
+  }
+
+  async verifyCoupon(payload: VerifyCouponBodyDto & VerifyCouponParamsDto) {
+    if (!this.compareTrackingId(payload))
+      throw new InConsistentTrackingIdException({
+        errors: ['TrackingId mismatch'],
+        meta: {
+          payload,
+        },
+      });
+    const products = payload.order.items.map(item => item.productId);
+    const coupon = await this.couponRepository
+      .createQueryBuilder('coupon')
+      .where('active = true')
+      .andWhere('code = :code')
+      .andWhere('product IN (:...productIds)')
+      .andWhere('start_date <= NOW()')
+      .setParameters({
+        code: payload.code,
+        productIds: products,
+      })
+      .getOneOrFail()
+      .catch(err => {
+        throw new UnknownCouponCodeException({
+          debugDetails: { err },
+          errors: ['coupon code not found'],
+          meta: {
+            payload,
+            products,
+          },
+        });
+      });
+
+    const discount = computeDiscountForOrder(coupon, payload.order);
+    return {
+      amountOff: discount.amountOff,
+      code: payload.code,
+      discountType: coupon.discountType,
+      metadata: {},
+      order: {
+        ...payload.order,
+        totalAmount: payload.order.amount - discount.discount,
+        totalDiscountAmount: discount.discount,
+      },
+      percentOff: discount.percentOff,
+      sessionId: v4(),
+      trackingId: payload.trackingId,
+      valid: true,
+    };
+  }
+
+  compareTrackingId(payload: VerifyCouponBodyDto & VerifyCouponParamsDto) {
+    return this.trackingService.isTrackingIdMatch({
+      coupon: { code: payload.code },
+      customer: {
+        id: payload.customer.id,
+      },
+      order: {
+        id: payload.order.id,
+      },
+      trackingId: payload.trackingId,
+    });
   }
 }
 
@@ -96,26 +150,4 @@ function computeDiscountForOrder(coupon: Coupon, order: Order) {
     return { amountOff: coupon.amountOff, discount: coupon.amountOff };
   }
   return { amountOff: 0, discount: 0 };
-}
-
-function compareTrackingId(
-  secretKeys: string[],
-  payload: VerifyCouponBodyDto & VerifyCouponParamsDto,
-) {
-  if (payload.trackingId) {
-    const givenTrackingId = payload.trackingId;
-    return (
-      secretKeys
-        .map(key =>
-          computeTrackingId({
-            coupon: { code: payload.code },
-            customer: { id: payload.customer.id },
-            order: { id: payload.order.id },
-            secretKey: key,
-          }),
-        )
-        .find(id => id === givenTrackingId) !== undefined
-    );
-  }
-  return true;
 }

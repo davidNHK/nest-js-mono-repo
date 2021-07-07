@@ -76,8 +76,15 @@ export class VerifyCouponBodyDto {
 }
 
 export class ClientVerifyCouponBodyDto {
-  @IsOptional()
-  trackingId?: string;
+  @IsDefined()
+  @Type(() => Customer)
+  @ValidateNested()
+  customer: Customer;
+
+  @IsDefined()
+  @Type(() => Order)
+  @ValidateNested()
+  order: Order;
 
   @IsOptional()
   @IsObject()
