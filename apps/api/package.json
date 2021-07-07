@@ -48,7 +48,7 @@
     "@types/luxon": "1.27.1",
     "@types/node": "15.14.0",
     "@types/passport-jwt": "3.0.6",
-    "@types/ramda": "0.27.42",
+    "@types/ramda": "0.27.43",
     "@types/serialize-error": "4.0.1",
     "@types/supertest": "2.0.11",
     "eslint": "7.30.0",
