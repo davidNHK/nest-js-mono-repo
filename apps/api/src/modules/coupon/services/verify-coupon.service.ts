@@ -4,9 +4,9 @@ import { v4 } from 'uuid';
 
 import type {
   ClientVerifyCouponBodyDto,
-  Order,
   VerifyCouponBodyDto,
   VerifyCouponParamsDto,
+  VerifyingOrderRequest,
 } from '../dto/requests/verify-coupon.dto';
 import {
   assertAmountDiscountCoupon,
@@ -138,7 +138,7 @@ export class VerifyCouponService {
   }
 }
 
-function computeDiscountForOrder(coupon: Coupon, order: Order) {
+function computeDiscountForOrder(coupon: Coupon, order: VerifyingOrderRequest) {
   if (assertPercentDiscountCoupon(coupon)) {
     const discount = Math.round(order.amount * (coupon.percentOff / 100));
     // From business requirement, it should always integer amount

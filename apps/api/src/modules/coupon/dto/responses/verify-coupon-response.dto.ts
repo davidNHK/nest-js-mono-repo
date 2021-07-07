@@ -2,7 +2,7 @@ import { BaseAPIResponse } from '@api/dto/responses/base-api-response.dto';
 import { Exclude, Expose, Type } from 'class-transformer';
 
 @Exclude()
-export class OrderItem {
+export class VerifyingOrderItemResponse {
   @Expose()
   price: number;
 
@@ -14,7 +14,7 @@ export class OrderItem {
 }
 
 @Exclude()
-export class Order {
+export class VerifyingOrderResponse {
   @Expose()
   id: string;
 
@@ -28,14 +28,14 @@ export class Order {
   totalDiscountAmount: number;
 
   @Expose()
-  items: OrderItem[];
+  items: VerifyingOrderItemResponse[];
 }
 
 @Exclude()
 class VerifyCouponResponse {
-  @Type(() => Order)
+  @Type(() => VerifyingOrderResponse)
   @Expose()
-  order: Order;
+  order: VerifyingOrderResponse;
 
   @Expose()
   discountType: string;

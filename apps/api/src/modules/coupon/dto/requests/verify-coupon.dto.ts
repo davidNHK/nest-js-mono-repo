@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-export class OrderItem {
+export class VerifyingOrderItemRequest {
   @Min(0)
   @Type(() => Number)
   @IsNumber()
@@ -29,7 +29,7 @@ export class OrderItem {
   metadata?: Record<string, unknown>;
 }
 
-export class Order {
+export class VerifyingOrderRequest {
   @IsString()
   id: string;
 
@@ -39,19 +39,19 @@ export class Order {
   amount: number;
 
   @IsArray()
-  @Type(() => OrderItem)
+  @Type(() => VerifyingOrderItemRequest)
   @Transform(({ value }) => (Array.isArray(value) ? value : [value]), {
     toClassOnly: true,
   })
   @ValidateNested()
-  items: OrderItem[];
+  items: VerifyingOrderItemRequest[];
 
   @IsOptional()
   @IsObject()
   metadata?: Record<string, unknown>;
 }
 
-export class Customer {
+export class VerifyingCustomerRequest {
   @IsString()
   id: string;
 
@@ -62,14 +62,14 @@ export class Customer {
 
 export class VerifyCouponBodyDto {
   @IsDefined()
-  @Type(() => Customer)
+  @Type(() => VerifyingCustomerRequest)
   @ValidateNested()
-  customer: Customer;
+  customer: VerifyingCustomerRequest;
 
   @IsDefined()
-  @Type(() => Order)
+  @Type(() => VerifyingOrderRequest)
   @ValidateNested()
-  order: Order;
+  order: VerifyingOrderRequest;
 
   @IsString()
   trackingId: string;
@@ -77,14 +77,14 @@ export class VerifyCouponBodyDto {
 
 export class ClientVerifyCouponBodyDto {
   @IsDefined()
-  @Type(() => Customer)
+  @Type(() => VerifyingCustomerRequest)
   @ValidateNested()
-  customer: Customer;
+  customer: VerifyingCustomerRequest;
 
   @IsDefined()
-  @Type(() => Order)
+  @Type(() => VerifyingOrderRequest)
   @ValidateNested()
-  order: Order;
+  order: VerifyingOrderRequest;
 
   @IsOptional()
   @IsObject()
