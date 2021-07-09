@@ -26,4 +26,12 @@ export class FindCouponService {
       total,
     };
   }
+
+  async findCouponByCode(code: string) {
+    return await this.couponRepository.findOneOrFail({
+      where: {
+        code,
+      },
+    });
+  }
 }

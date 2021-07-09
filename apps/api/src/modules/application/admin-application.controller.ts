@@ -13,7 +13,7 @@ import {
 } from './dto/requests/update-application.dto';
 
 @Controller('/admin/v1')
-@ApiTags('Application')
+@ApiTags('Application Admin')
 export class AdminApplicationController {
   constructor(
     private manipulateApplicationService: ManipulateApplicationService,
