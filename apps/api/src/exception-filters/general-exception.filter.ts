@@ -54,15 +54,7 @@ export class GeneralExceptionFilter implements ExceptionFilter {
       {
         duration: end - startAt,
         err: err(httpException),
-        http: http(
-          {
-            ...request,
-          } as any,
-          {
-            ...response,
-            body,
-          } as any,
-        ),
+        http: http(request, Object.assign(response, { body })),
         message: 'Access Log',
       },
       exception.stack,

@@ -1,9 +1,6 @@
 import type { Request, Response } from 'express';
 
-export function http(
-  request: Request & { reqId: string },
-  response: Response & { body: any },
-) {
+export function http(request: Request, response: Response & { body: any }) {
   return {
     method: request.method,
     params: request.params,
