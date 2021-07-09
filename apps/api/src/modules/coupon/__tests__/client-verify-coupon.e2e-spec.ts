@@ -60,7 +60,7 @@ describe('GET /client/v1/coupons/:code/validate', () => {
           },
         })
         .set('x-client-application', application.name)
-        .set('x-client-token', application.client_secret_key[0])
+        .set('x-client-token', application.clientSecretKey[0])
         .expect(expectResponseCode({ expectedStatusCode: 200 }));
       expect(body.data).toStrictEqual({
         code: couponCode,
@@ -112,7 +112,7 @@ describe('GET /client/v1/coupons/:code/validate', () => {
         },
       })
       .set('x-client-application', application.name)
-      .set('x-client-token', application.client_secret_key[0])
+      .set('x-client-token', application.clientSecretKey[0])
       .expect(expectResponseCode({ expectedStatusCode: 400 }));
     expect(body.code).toStrictEqual('ERR_UNKNOWN_COUPON_CODE');
   });

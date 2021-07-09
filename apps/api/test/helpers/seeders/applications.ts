@@ -6,16 +6,12 @@ import { Connection } from 'typeorm';
 export async function createApplicationInDB(
   testingModule: TestingModule,
   applications: Partial<Application>[],
-) {
+): Promise<Application[]> {
   const conn = testingModule.get<Connection>(Connection);
   const createdApplications = await conn
-    .createQueryBuilder()
-    .insert()
-    .into(Application)
-    .values(applications)
-    .output('*')
-    .execute();
-  return createdApplications.raw;
+    .getRepository(Application)
+    .save(applications);
+  return createdApplications;
 }
 
 export function applicationBuilder(

@@ -12,32 +12,35 @@ import { DateTime } from 'luxon';
 export async function createCouponInDB(
   testingModule: TestingModule,
   coupons: Partial<Coupon>[],
-) {
+): Promise<Coupon[]> {
   const repositoryFactory = testingModule.get<CouponRepositoryFactory>(
     CouponRepositoryFactory,
   );
 
-  const createdCoupons = await Promise.all(
-    Object.entries({
-      [DiscountType.Percent]: coupons.filter(coupon =>
-        assertPercentDiscountCoupon(<Coupon>coupon),
-      ),
-      [DiscountType.Amount]: coupons.filter(coupon =>
-        assertAmountDiscountCoupon(<Coupon>coupon),
-      ),
-    }).map(([discountType, records]) => {
-      // @ts-expect-error discountType is string
-      return repositoryFactory.getRepository({ discountType }).save(records);
-    }),
-  );
-  return createdCoupons.map(records => records).flat();
+  const createdCoupons = (
+    await Promise.all(
+      Object.entries({
+        [DiscountType.Percent]: coupons.filter(coupon =>
+          assertPercentDiscountCoupon(<Coupon>coupon),
+        ),
+        [DiscountType.Amount]: coupons.filter(coupon =>
+          assertAmountDiscountCoupon(<Coupon>coupon),
+        ),
+      }).map(([discountType, records]) => {
+        // @ts-expect-error discountType is string
+        return repositoryFactory.getRepository({ discountType }).save(records);
+      }),
+    )
+  ).flat();
+  if (createdCoupons.length === 0) throw new Error('Create coupon failed!');
+  return createdCoupons;
 }
 
 export function couponBuilder(override?: Partial<CreateCouponBodyDto>): any {
   const now = DateTime.now();
   const result = {
     metadata: {},
-    product: 'template',
+    product: 'fake-product-id',
     startDate: now.startOf('month').toJSDate(),
     ...override,
   };

@@ -96,7 +96,7 @@ describe('POST /v1/coupons/:code/validate', () => {
           }),
         })
         .set('X-App', application.name)
-        .set('X-App-Token', application.server_secret_key[0])
+        .set('X-App-Token', application.serverSecretKey[0])
         .expect(expectResponseCode({ expectedStatusCode: 200 }));
       expect(body.data).toStrictEqual({
         code: couponCode,
@@ -157,7 +157,7 @@ describe('POST /v1/coupons/:code/validate', () => {
         },
       })
       .set('X-Client-application', application.name)
-      .set('X-Client-token', application.client_secret_key[0])
+      .set('X-Client-token', application.clientSecretKey[0])
       .expect(expectResponseCode({ expectedStatusCode: 200 }));
     await createRequestAgent(app.getHttpServer())
       .post(`/v1/coupons/FooBar!/validate`)
@@ -180,7 +180,7 @@ describe('POST /v1/coupons/:code/validate', () => {
         trackingId: body.data.trackingId,
       })
       .set('X-App', application.name)
-      .set('X-App-Token', application.server_secret_key[0])
+      .set('X-App-Token', application.serverSecretKey[0])
       .expect(expectResponseCode({ expectedStatusCode: 200 }));
   });
 
@@ -222,7 +222,7 @@ describe('POST /v1/coupons/:code/validate', () => {
         }),
       })
       .set('X-App', application.name)
-      .set('X-App-Token', application.server_secret_key[0])
+      .set('X-App-Token', application.serverSecretKey[0])
       .expect(expectResponseCode({ expectedStatusCode: 400 }));
     expect(body.code).toStrictEqual('ERR_UNKNOWN_COUPON_CODE');
   });

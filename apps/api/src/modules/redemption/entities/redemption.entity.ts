@@ -2,12 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { Coupon } from '../../coupon/entities/coupon.entity';
+import { RedemptionState } from '../states/redemption-stateus';
 
 @Entity()
 export class Redemption {
@@ -23,7 +25,8 @@ export class Redemption {
   @Column()
   orderId: string;
 
-  @ManyToOne(() => Coupon)
+  @ManyToOne(() => Coupon, coupon => coupon.code)
+  @JoinColumn({ name: 'coupon_code', referencedColumnName: 'code' })
   coupon: Coupon;
 
   @Column({
@@ -31,6 +34,12 @@ export class Redemption {
     type: 'json',
   })
   metadata: Record<string, unknown>;
+
+  @Column({
+    enum: RedemptionState,
+    nullable: false,
+  })
+  status: RedemptionState;
 
   @UpdateDateColumn()
   updatedAt: Date;

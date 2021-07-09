@@ -11,7 +11,7 @@ import {
 
 import { RedemptionRequestDto } from './redemption-request.dto';
 
-export class RedemptionOrderItem {
+export class RedemptionOrderItemRequest {
   @Min(0)
   @Type(() => Number)
   @IsNumber()
@@ -26,7 +26,7 @@ export class RedemptionOrderItem {
   quantity: number;
 }
 
-export class RedemptionOrder {
+export class RedemptionOrderRequest {
   @IsString()
   id: string;
 
@@ -36,15 +36,15 @@ export class RedemptionOrder {
   amount: number;
 
   @IsArray()
-  @Type(() => RedemptionOrderItem)
+  @Type(() => RedemptionOrderItemRequest)
   @Transform(({ value }) => (Array.isArray(value) ? value : [value]), {
     toClassOnly: true,
   })
   @ValidateNested()
-  items: RedemptionOrderItem[];
+  items: RedemptionOrderItemRequest[];
 }
 
-export class RedemptionCustomer {
+export class RedemptionCustomerRequest {
   @IsString()
   id: string;
 }
@@ -53,15 +53,18 @@ export class CreateRedemptionBodyDto extends PickType(RedemptionRequestDto, [
   'trackingId',
   'metadata',
 ] as const) {
-  @Type(() => RedemptionCustomer)
+  @Type(() => RedemptionCustomerRequest)
   @ValidateNested()
   @IsDefined()
-  customer: RedemptionCustomer;
+  customer: RedemptionCustomerRequest;
 
-  @Type(() => RedemptionOrder)
+  @Type(() => RedemptionOrderRequest)
   @ValidateNested()
   @IsDefined()
-  order: RedemptionOrder;
+  order: RedemptionOrderRequest;
+
+  @IsString()
+  trackingId: string;
 }
 
 export class CreateRedemptionParamsDto {

@@ -15,7 +15,7 @@ export function catchDBError(e: QueryFailedError & { code: string }): any {
       errors: [e.message],
       meta: {},
     });
-  if (e.code === '23514')
+  if (['23514', '23502'].includes(e.code))
     throw new BadRequestException({
       code: ErrorCode.ValidationError,
       debugDetails: {

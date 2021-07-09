@@ -16,18 +16,17 @@ const appContext = withNestServerContext({
 describe('GET /v1/coupons', () => {
   it('/v1/coupons (GET)', async () => {
     const app = appContext.app;
-    await createCouponInDB(appContext.module, [
-      couponBuilder({
-        active: true,
-        code: 'dummy-code-001',
-        discountType: DiscountType.Amount,
-      }),
-    ]);
+    const coupon = couponBuilder({
+      active: true,
+      code: 'dummy-code-001',
+      discountType: DiscountType.Amount,
+    });
+    await createCouponInDB(appContext.module, [coupon]);
     const { body } = await createRequestAgent(app.getHttpServer())
       .get('/admin/v1/coupons')
       .set('Authorization', signFakedToken(appContext.module))
       .query({
-        products: ['template'],
+        products: [coupon.product],
       })
       .expect(expectResponseCode({ expectedStatusCode: 200 }));
     expect(body.data.items).toHaveLength(1);
