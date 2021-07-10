@@ -107,6 +107,7 @@ describe('LoggingInterceptor', () => {
         message: 'Access Log',
       },
       'LoggingInterceptor',
+      false,
     );
   });
 });

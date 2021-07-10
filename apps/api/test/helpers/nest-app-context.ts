@@ -29,7 +29,6 @@ interface AppContext {
 export async function createTestApp(
   moduleMetadata: ModuleMetadata,
 ): Promise<AppContext> {
-  // @ts-expect-error included in e2e-test-environment and ts cannot refer that
   const { db } = global.e2eConfig;
   const module = Test.createTestingModule({
     controllers: [...(moduleMetadata.controllers ?? [])],
