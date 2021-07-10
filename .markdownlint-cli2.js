@@ -1,3 +1,3 @@
-module.exports={
-  "ignores": ["CHANGELOG.md"]
-}
+module.exports = {
+  ignores: ['CHANGELOG.md'],
+};
