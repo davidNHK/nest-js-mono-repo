@@ -4,7 +4,7 @@ import { GeneralExceptionFilter } from '@api/exception-filters/general-exception
 import { BadRequestException } from '@api/exceptions/BadRequestException';
 import { ErrorCode } from '@api/exceptions/ErrorCode';
 import { LoggingInterceptor } from '@api/interceptors/logging.interceptor';
-import { ApplicationModule } from '@api/modules/application/application.module';
+import { AuthModule } from '@api/modules/auth/auth.module';
 import { DbOperationLogger } from '@api/modules/logger/db-operation-logger';
 import { LoggingModule } from '@api/modules/logger/logging.module';
 import { NestLogger } from '@api/modules/logger/nest-logger';
@@ -60,7 +60,7 @@ export async function createTestApp(
         },
       }),
       RedisModule.forRootAsync(),
-      ApplicationModule,
+      AuthModule,
       ...(moduleMetadata.imports ?? []),
     ],
     providers: [
