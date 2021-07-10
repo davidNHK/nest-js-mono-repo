@@ -1,5 +1,4 @@
-import { AppClientSecretKey } from '@api/decorators/app-client-secret-key.decorator';
-import { AppServerSecretKey } from '@api/decorators/app-server-secret-key.decorator';
+import { AppClientSecretKey, AppServerSecretKey } from '@api/modules/auth';
 import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 

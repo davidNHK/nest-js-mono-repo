@@ -1,5 +1,4 @@
-import { AppServerSecretKey } from '@api/decorators/app-server-secret-key.decorator';
-import { SingleRedemptionResponseDto } from '@api/modules/redemption/dto/responses/single-redemption-response.dto';
+import { AppServerSecretKey } from '@api/modules/auth';
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -7,6 +6,7 @@ import {
   CreateRedemptionBodyDto,
   CreateRedemptionParamsDto,
 } from './dto/requests/create-redemption.dto';
+import { SingleRedemptionResponseDto } from './dto/responses/single-redemption-response.dto';
 import { ManipulateRedemptionService } from './services/manipulate-redemption.service';
 
 @Controller('/v1')

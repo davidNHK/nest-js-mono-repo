@@ -1,7 +1,4 @@
-import { OpenIdClientCredentialsGrant } from '@api/decorators/open-id-client-credentials-grant.decorator';
-import { SingleApplicationResponseDto } from '@api/modules/application/dto/responses/single-application-response.dto';
-import { FindApplicationService } from '@api/modules/application/services/find-application.service';
-import { ManipulateApplicationService } from '@api/modules/application/services/manipulate-application.service';
+import { OpenIdClientCredentialsGrant } from '@api/modules/auth';
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -11,6 +8,9 @@ import {
   UpdateApplicationBodyDto,
   UpdateApplicationParamsDto,
 } from './dto/requests/update-application.dto';
+import { SingleApplicationResponseDto } from './dto/responses/single-application-response.dto';
+import { FindApplicationService } from './services/find-application.service';
+import { ManipulateApplicationService } from './services/manipulate-application.service';
 
 @Controller('/admin/v1')
 @ApiTags('Application Admin')

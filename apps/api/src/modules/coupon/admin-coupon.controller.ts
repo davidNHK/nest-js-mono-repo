@@ -1,4 +1,4 @@
-import { OpenIdClientCredentialsGrant } from '@api/decorators/open-id-client-credentials-grant.decorator';
+import { OpenIdClientCredentialsGrant } from '@api/modules/auth';
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
