@@ -10,7 +10,7 @@ import { SingleRedemptionResponseDto } from './dto/responses/single-redemption-r
 import { ManipulateRedemptionService } from './services/manipulate-redemption.service';
 
 @Controller('/v1')
-@ApiTags('Redemption')
+@ApiTags('Redemption Public')
 export class PublicRedemptionController {
   constructor(
     private manipulateRedemptionService: ManipulateRedemptionService,
