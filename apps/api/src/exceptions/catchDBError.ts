@@ -23,7 +23,6 @@ export function catchDBError(e: QueryFailedError & { code: string }): any {
         fromDB: true,
       },
       errors: [e.message],
-      meta: {},
     });
   throw e;
 }

@@ -8,6 +8,7 @@ import type { Repository } from 'typeorm';
 import { DiscountType } from '../constants/discount-type.constants';
 import type { Coupon } from '../entities/coupon.entity';
 import { CouponRepositoryFactory } from './coupon-repository.factory';
+import { FindCouponService } from './find-coupon.service';
 import { ManipulateCouponService } from './manipulate-coupon.service';
 
 function createTestingModule({
@@ -22,6 +23,12 @@ function createTestingModule({
         provide: CouponRepositoryFactory,
         useValue: {
           getRepository,
+        },
+      },
+      {
+        provide: FindCouponService,
+        useValue: {
+          findCouponByCode: jest.fn(),
         },
       },
     ],

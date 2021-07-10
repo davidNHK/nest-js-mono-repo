@@ -86,10 +86,8 @@ export class VerifyCouponService {
     const products = payload.order.items.map(item => item.productId);
     const coupon = await this.couponRepository
       .createQueryBuilder('coupon')
-      .where('active = true')
-      .andWhere('code = :code')
+      .where('code = :code')
       .andWhere('product IN (:...productIds)')
-      .andWhere('start_date <= NOW()')
       .setParameters({
         code: payload.code,
         productIds: products,
