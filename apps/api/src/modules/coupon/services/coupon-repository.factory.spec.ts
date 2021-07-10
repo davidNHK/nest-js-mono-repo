@@ -3,6 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { DiscountType } from '../constants/discount-type.constants';
 import { AmountDiscountCoupon } from '../entities/amount-discount-coupon.entity';
+import { Coupon } from '../entities/coupon.entity';
 import { PercentDiscountCoupon } from '../entities/percent-discount-coupon.entity';
 import { CouponRepositoryFactory } from './coupon-repository.factory';
 
@@ -18,11 +19,21 @@ function createTestingModule() {
         provide: getRepositoryToken(PercentDiscountCoupon),
         useValue: { name: PercentDiscountCoupon.name },
       },
+      {
+        provide: getRepositoryToken(Coupon),
+        useValue: { name: Coupon.name },
+      },
     ],
   }).compile();
 }
 
 describe('CouponRepositoryFactory', () => {
+  it('support undefined from .getRepository', async () => {
+    const app: TestingModule = await createTestingModule();
+    const factory = app.get(CouponRepositoryFactory);
+    expect(() => factory.getRepository()).not.toThrow();
+  });
+
   it.each(Object.values(DiscountType))(
     'support %s from .getRepository',
     async discountType => {

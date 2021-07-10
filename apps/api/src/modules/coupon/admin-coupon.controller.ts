@@ -1,9 +1,22 @@
 import { OpenIdClientCredentialsGrant } from '@api/modules/auth';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CreateCouponBodyDto } from './dto/requests/create-coupon.dto';
 import { FindManyCouponQueryDto } from './dto/requests/find-many-coupon.dto';
+import {
+  UpdateCouponBodyDto,
+  UpdateCouponParamsDto,
+} from './dto/requests/update-coupon.dto';
+import { UpdateCouponActiveParamsDto } from './dto/requests/update-coupon-active.dto';
 import { ManyCouponResponseDto } from './dto/responses/many-coupon-response.dto';
 import { SingleCouponResponseDto } from './dto/responses/single-coupon-response.dto';
 import { FindCouponService } from './services/find-coupon.service';
@@ -33,10 +46,32 @@ export class AdminCouponController {
   async createCoupon(
     @Body() body: CreateCouponBodyDto,
   ): Promise<SingleCouponResponseDto> {
-    const createdCoupon = await this.manipulateCouponService.createCoupon({
-      ...body,
-    });
+    const createdCoupon = await this.manipulateCouponService.createCoupon(body);
 
     return new SingleCouponResponseDto(createdCoupon);
+  }
+
+  @OpenIdClientCredentialsGrant()
+  @Patch('/coupons/:code')
+  async updateCoupon(
+    @Body() body: UpdateCouponBodyDto,
+    @Param() params: UpdateCouponParamsDto,
+  ): Promise<SingleCouponResponseDto> {
+    const updatedCoupon = await this.manipulateCouponService.updateCoupon({
+      ...body,
+      ...params,
+    });
+
+    return new SingleCouponResponseDto(updatedCoupon);
+  }
+
+  @OpenIdClientCredentialsGrant()
+  @Patch('/coupons/:code/:state')
+  async updateCouponActiveState(
+    @Param() params: UpdateCouponActiveParamsDto,
+  ): Promise<SingleCouponResponseDto> {
+    const updatedCoupon =
+      await this.manipulateCouponService.updateCouponByState(params);
+    return new SingleCouponResponseDto(updatedCoupon);
   }
 }
