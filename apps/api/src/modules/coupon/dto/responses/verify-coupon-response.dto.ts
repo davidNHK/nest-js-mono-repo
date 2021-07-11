@@ -29,6 +29,9 @@ export class VerifyingOrderResponse {
 
   @Expose()
   items: VerifyingOrderItemResponse[];
+
+  @Expose()
+  metadata?: Record<string, unknown>;
 }
 
 @Exclude()

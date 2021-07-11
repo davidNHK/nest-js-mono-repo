@@ -4,6 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { DiscountType } from '../constants/discount-type.constants';
 import { AmountDiscountCoupon } from '../entities/amount-discount-coupon.entity';
 import { Coupon } from '../entities/coupon.entity';
+import { EffectAmountDiscountCoupon } from '../entities/effect-amount-discount-coupon.entity';
+import { EffectPercentDiscountCoupon } from '../entities/effect-percent-discount-coupon.entity';
 import { PercentDiscountCoupon } from '../entities/percent-discount-coupon.entity';
 import { CouponRepositoryFactory } from './coupon-repository.factory';
 
@@ -18,6 +20,14 @@ function createTestingModule() {
       {
         provide: getRepositoryToken(PercentDiscountCoupon),
         useValue: { name: PercentDiscountCoupon.name },
+      },
+      {
+        provide: getRepositoryToken(EffectPercentDiscountCoupon),
+        useValue: { name: EffectPercentDiscountCoupon.name },
+      },
+      {
+        provide: getRepositoryToken(EffectAmountDiscountCoupon),
+        useValue: { name: EffectAmountDiscountCoupon.name },
       },
       {
         provide: getRepositoryToken(Coupon),

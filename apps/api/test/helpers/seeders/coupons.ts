@@ -2,6 +2,8 @@ import { DiscountType } from '@api/modules/coupon/constants/discount-type.consta
 import type { CreateCouponBodyDto } from '@api/modules/coupon/dto/requests/create-coupon.dto';
 import {
   assertAmountDiscountCoupon,
+  assertEffectAmountDiscountCoupon,
+  assertEffectPercentDiscountCoupon,
   assertPercentDiscountCoupon,
 } from '@api/modules/coupon/entities/assert-coupon';
 import type { Coupon } from '@api/modules/coupon/entities/coupon.entity';
@@ -21,10 +23,16 @@ export async function createCouponInDB(
     await Promise.all(
       Object.entries({
         [DiscountType.Percent]: coupons.filter(coupon =>
-          assertPercentDiscountCoupon(<Coupon>coupon),
+          assertPercentDiscountCoupon(coupon),
         ),
         [DiscountType.Amount]: coupons.filter(coupon =>
-          assertAmountDiscountCoupon(<Coupon>coupon),
+          assertAmountDiscountCoupon(coupon),
+        ),
+        [DiscountType.EffectPercent]: coupons.filter(coupon =>
+          assertEffectPercentDiscountCoupon(coupon),
+        ),
+        [DiscountType.EffectAmount]: coupons.filter(coupon =>
+          assertEffectAmountDiscountCoupon(coupon),
         ),
       }).map(([discountType, records]) => {
         // @ts-expect-error discountType is string

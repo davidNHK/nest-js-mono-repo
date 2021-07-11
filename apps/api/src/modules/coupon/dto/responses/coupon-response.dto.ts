@@ -37,5 +37,8 @@ export class CouponResponseDto {
   percentOff?: number;
 
   @Expose()
+  effect?: string;
+
+  @Expose()
   metadata?: Record<string, unknown>;
 }
