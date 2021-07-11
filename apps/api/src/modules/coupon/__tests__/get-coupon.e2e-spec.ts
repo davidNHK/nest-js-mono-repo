@@ -1,4 +1,4 @@
-import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
+import { createRequestAgent } from '@api-test-helpers/create-request-agent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
 import { withNestServerContext } from '@api-test-helpers/nest-app-context';
 import {
