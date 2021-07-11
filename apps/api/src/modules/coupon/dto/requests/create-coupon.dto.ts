@@ -13,4 +13,5 @@ export class CreateCouponBodyDto extends PickType(CouponRequestDto, [
   'amountOff',
   'percentOff',
   'metadata',
+  'effect',
 ] as const) {}

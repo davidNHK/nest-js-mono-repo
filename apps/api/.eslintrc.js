@@ -15,4 +15,7 @@ module.exports = {
       },
     },
   ],
+  rules: {
+    'max-params': 'off',
+  },
 };

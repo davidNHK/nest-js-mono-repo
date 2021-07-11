@@ -50,14 +50,26 @@ export class CouponRequestDto {
 
   @IsNumber()
   @Min(0)
-  @ValidateIf(o => o.discountType === DiscountType.Amount)
+  @ValidateIf(o =>
+    [DiscountType.Amount, DiscountType.EffectAmount].includes(o.discountType),
+  )
   amountOff!: number;
 
   @IsNumber()
   @Min(0)
   @Max(100)
-  @ValidateIf(o => o.discountType === DiscountType.Percent)
+  @ValidateIf(o =>
+    [DiscountType.EffectPercent, DiscountType.Percent].includes(o.discountType),
+  )
   percentOff!: number;
+
+  @IsString()
+  @ValidateIf(o =>
+    [DiscountType.EffectPercent, DiscountType.EffectAmount].includes(
+      o.discountType,
+    ),
+  )
+  effect!: string;
 
   @IsOptional()
   @IsObject()

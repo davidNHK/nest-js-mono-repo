@@ -47,9 +47,11 @@ const appContext = withNestServerContext({
 });
 describe('POST /v1/coupons/:code/redemption', () => {
   it.each`
-    code                 | discountType            | redeemStatus
-    ${'AmountDiscount'}  | ${DiscountType.Amount}  | ${RedemptionState.FulFilled}
-    ${'PercentDiscount'} | ${DiscountType.Percent} | ${RedemptionState.FulFilled}
+    code                       | discountType                  | redeemStatus
+    ${'AmountDiscount'}        | ${DiscountType.Amount}        | ${RedemptionState.FulFilled}
+    ${'PercentDiscount'}       | ${DiscountType.Percent}       | ${RedemptionState.FulFilled}
+    ${'EffectPercentDiscount'} | ${DiscountType.EffectPercent} | ${RedemptionState.PendingFulFill}
+    ${'EffectAmountDiscount'}  | ${DiscountType.EffectAmount}  | ${RedemptionState.PendingFulFill}
   `(
     'created redemption record with $redeemStatus status for $code',
     async ({ code, discountType, redeemStatus }) => {

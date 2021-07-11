@@ -10,6 +10,9 @@ import {
   couponBuilder,
   createCouponInDB,
 } from '@api-test-helpers/seeders/coupons';
+import { customBuilder } from '@api-test-helpers/seeders/customers';
+import { orderBuilder } from '@api-test-helpers/seeders/orders';
+import { productBuilder } from '@api-test-helpers/seeders/products';
 import type { TestingModule } from '@nestjs/testing';
 
 import { DiscountType } from '../constants/discount-type.constants';
@@ -44,80 +47,77 @@ function computeTrackingId(
 
 describe('POST /v1/coupons/:code/validate', () => {
   it.each`
-    couponCode   | percent | amount   | deductedAmount
-    ${'NCORP25'} | ${25}   | ${65000} | ${48800}
-    ${'NCORP50'} | ${50}   | ${65000} | ${32500}
+    couponCode           | discountType                  | coupon                  | exceptedOff             | amount   | deductedAmount
+    ${'Percent25'}       | ${DiscountType.Percent}       | ${{ percentOff: 25 }}   | ${{ percentOff: 25 }}   | ${65000} | ${48800}
+    ${'Percent50'}       | ${DiscountType.Percent}       | ${{ percentOff: 50 }}   | ${{ percentOff: 50 }}   | ${65000} | ${32500}
+    ${'Amount100'}       | ${DiscountType.Amount}        | ${{ amountOff: 10000 }} | ${{ amountOff: 10000 }} | ${65000} | ${55000}
+    ${'EffectAmount100'} | ${DiscountType.EffectAmount}  | ${{ amountOff: 10000 }} | ${{ amountOff: 0 }}     | ${65000} | ${65000}
+    ${'EffectPercent50'} | ${DiscountType.EffectPercent} | ${{ percentOff: 50 }}   | ${{ amountOff: 0 }}     | ${65000} | ${65000}
   `(
-    '$couponCode coupon should valid and deduct amount from $deductedAmount to $amount',
-    async ({ couponCode, percent, amount, deductedAmount }) => {
+    '$couponCode coupon should valid and deduct amount from $amount to $deductedAmount',
+    async ({
+      couponCode,
+      discountType,
+      coupon,
+      amount,
+      exceptedOff,
+      deductedAmount,
+    }) => {
       const { app } = appContext;
       const [application] = await createApplicationInDB(appContext.module, [
         applicationBuilder({
           name: getTestName(),
         }),
       ]);
+      const product = productBuilder();
+      const order = orderBuilder({
+        amount: amount,
+        items: [product],
+      });
+      const customer = customBuilder();
+      const trackingId = computeTrackingId(appContext.module, {
+        coupon: {
+          code: couponCode,
+        },
+        customer: {
+          id: customer.id,
+        },
+        order: {
+          id: order.id,
+        },
+      });
       await createCouponInDB(appContext.module, [
         couponBuilder({
           active: true,
           code: couponCode,
-          discountType: DiscountType.Percent,
-          percentOff: percent,
-          product: 'incorporation',
+          discountType: discountType,
+          product: product.productId,
+          ...coupon,
         }),
       ]);
 
       const { body } = await createRequestAgent(app.getHttpServer())
         .post(`/v1/coupons/${couponCode}/validate`)
         .send({
-          customer: {
-            id: 'fake-id',
-          },
-          order: {
-            amount: amount,
-            id: 'order-id',
-            items: [
-              {
-                price: amount,
-                productId: 'incorporation',
-                quantity: 1,
-              },
-            ],
-          },
-          trackingId: computeTrackingId(appContext.module, {
-            coupon: {
-              code: couponCode,
-            },
-            customer: {
-              id: 'fake-id',
-            },
-            order: {
-              id: 'order-id',
-            },
-          }),
+          customer: customer,
+          order: order,
+          trackingId: trackingId,
         })
         .set('X-App', application.name)
         .set('X-App-Token', application.serverSecretKey[0])
         .expect(expectResponseCode({ expectedStatusCode: 200 }));
       expect(body.data).toStrictEqual({
         code: couponCode,
-        discountType: 'PERCENT',
+        discountType: discountType,
         metadata: {},
         order: {
-          amount: amount,
-          id: 'order-id',
-          items: [
-            {
-              price: amount,
-              productId: 'incorporation',
-              quantity: 1,
-            },
-          ],
           totalAmount: deductedAmount,
           totalDiscountAmount: amount - deductedAmount,
+          ...order,
         },
-        percentOff: percent,
-        trackingId: expect.any(String),
+        trackingId: trackingId,
         valid: true,
+        ...exceptedOff,
       });
     },
   );

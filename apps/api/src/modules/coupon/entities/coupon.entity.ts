@@ -8,8 +8,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { DiscountType } from '../constants/discount-type.constants';
 
 @Entity()
