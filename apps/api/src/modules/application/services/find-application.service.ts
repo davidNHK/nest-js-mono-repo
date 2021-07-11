@@ -1,7 +1,7 @@
 import { ApplicationNotFoundException } from '@api/modules/application/exceptions/ApplicationNotFoundException';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 
 import { Application } from '../entities/application.entity';
 
@@ -40,5 +40,17 @@ export class FindApplicationService {
         });
       });
     return application;
+  }
+
+  async findByOrigin(origin: string) {
+    const results = await this.applicationRepository.find({
+      where: {
+        origins: Raw(
+          alias => `${alias} @> ARRAY[:origin]::character varying[]`,
+          { origin },
+        ),
+      },
+    });
+    return results;
   }
 }

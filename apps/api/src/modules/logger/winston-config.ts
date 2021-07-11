@@ -7,15 +7,6 @@ const shouldPrettyPrintLog =
 
 const logTransports: { [key: string]: any[] } = {
   default: [new transports.Console({})],
-  development: [
-    new transports.File({
-      filename: '.app.log',
-      options: {
-        flag: 'w',
-      },
-    }),
-    new transports.Console({}),
-  ],
   test: [
     new transports.File({
       filename: '.test-app.log',

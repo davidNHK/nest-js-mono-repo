@@ -15,18 +15,19 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new NestLogger(new Logger()),
   });
-  app.enableCors(async (req, callback) => {
-    if (!req.headers.origin) return callback(null, { origin: true });
-    const appName = req.headers['X-Client-Application'];
-    const application = await app
-      .get<FindApplicationService>(FindApplicationService)
-      .findByName(appName)
-      .catch<null>(e => {
-        callback(e, { origin: false });
-        return null;
-      });
-    if (!application?.origins) return callback(null, { origin: false });
-    return callback(null, { origin: application.origins });
+  app.enableCors({
+    origin: async (origin, callback) => {
+      const applications = await app
+        .get<FindApplicationService>(FindApplicationService)
+        .findByOrigin(origin)
+        .catch(e => {
+          callback(e);
+          return null;
+        });
+      if (!applications || applications?.length === 0)
+        return callback(null, false);
+      return callback(null, origin);
+    },
   });
   app.use(helmet());
 
