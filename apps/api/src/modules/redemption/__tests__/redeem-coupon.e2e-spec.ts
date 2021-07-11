@@ -1,6 +1,6 @@
 import { DiscountType } from '@api/modules/coupon/constants/discount-type.constants';
 import { TrackingService } from '@api/modules/coupon/services/tracking.service';
-import { createRequestAgent } from '@api-test-helpers/createRequestAgent';
+import { createRequestAgent } from '@api-test-helpers/create-request-agent';
 import { expectResponseCode } from '@api-test-helpers/expect-response-code';
 import { getTestName } from '@api-test-helpers/jest/get-test-name';
 import { withNestServerContext } from '@api-test-helpers/nest-app-context';
