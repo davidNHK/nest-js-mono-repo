@@ -15,7 +15,7 @@
     "dotenv": "10.0.0",
     "helmet": "4.6.0",
     "ioredis": "4.27.6",
-    "jwks-rsa": "2.0.3",
+    "jwks-rsa": "2.0.4",
     "luxon": "2.0.1",
     "passport-jwt": "4.0.0",
     "pg": "8.6.0",
