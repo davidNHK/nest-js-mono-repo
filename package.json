@@ -28,7 +28,7 @@
     "is-ci": "3.0.0",
     "lint-staged": "11.1.1",
     "markdownlint-cli2": "0.2.0",
-    "mrm": "3.0.6",
+    "mrm": "3.0.8",
     "npm-package-json-lint": "5.2.2",
     "prettier": "2.3.2"
   }
