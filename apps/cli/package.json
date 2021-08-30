@@ -3,7 +3,7 @@
   "dependencies": {
     "convict": "6.2.0",
     "dotenv": "10.0.0",
-    "openid-client": "4.7.4",
+    "openid-client": "4.7.5",
     "serialize-error": "8.1.0"
   },
   "description": "",
