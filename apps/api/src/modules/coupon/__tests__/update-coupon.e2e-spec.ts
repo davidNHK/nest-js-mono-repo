@@ -39,7 +39,7 @@ describe('PATCH /admin/v1/coupons/:code', () => {
           startDate: now
             .startOf('month')
             .plus({
-              day: 10,
+              days: 10,
             })
             .toJSDate(),
         })
@@ -103,7 +103,7 @@ describe('PATCH /admin/v1/coupons/:code', () => {
       code: 'dummy-code-003',
       discountType: DiscountType.Amount,
       endDate: endDate.toJSDate(),
-      startDate: endDate.plus({ month: -1 }).toJSDate(),
+      startDate: endDate.plus({ months: -1 }).toJSDate(),
     });
     await createCouponInDB(appContext.module, [coupon]);
     const { body } = await createRequestAgent(app.getHttpServer())

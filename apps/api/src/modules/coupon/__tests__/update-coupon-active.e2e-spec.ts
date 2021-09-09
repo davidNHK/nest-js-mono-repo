@@ -43,7 +43,7 @@ describe('PATCH /admin/v1/coupons/:code/:state', () => {
       code: 'dummy-code-003',
       discountType: DiscountType.Amount,
       endDate: endDate.toJSDate(),
-      startDate: endDate.plus({ month: -1 }).toJSDate(),
+      startDate: endDate.plus({ months: -1 }).toJSDate(),
     });
     await createCouponInDB(appContext.module, [coupon]);
     const { body } = await createRequestAgent(app.getHttpServer())
@@ -61,7 +61,7 @@ describe('PATCH /admin/v1/coupons/:code/:state', () => {
       amountOff: 10,
       code: 'dummy-code-004',
       discountType: DiscountType.Amount,
-      startDate: now.plus({ month: 1 }).toJSDate(),
+      startDate: now.plus({ months: 1 }).toJSDate(),
     });
     await createCouponInDB(appContext.module, [coupon]);
     const { body } = await createRequestAgent(app.getHttpServer())
