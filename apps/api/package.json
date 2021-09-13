@@ -32,7 +32,7 @@
   },
   "description": "",
   "devDependencies": {
-    "@busybox/eslint-config": "5.5.0",
+    "@busybox/eslint-config": "5.5.1",
     "@nestjs/cli": "8.1.1",
     "@nestjs/schematics": "8.0.3",
     "@nestjs/testing": "8.0.6",
