@@ -1,7 +1,7 @@
 {
   "author": "",
   "dependencies": {
-    "@nestjs/common": "8.0.8",
+    "@nestjs/common": "8.0.9",
     "@nestjs/config": "1.0.1",
     "@nestjs/jwt": "8.0.0",
     "@nestjs/passport": "8.0.1",
