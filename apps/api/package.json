@@ -44,7 +44,7 @@
     "@types/passport-jwt": "3.0.6",
     "@types/ramda": "0.27.46",
     "@types/supertest": "2.0.11",
-    "eslint": "7.32.0",
+    "eslint": "8.1.0",
     "jest": "27.3.1",
     "jest-environment-node": "27.3.1",
     "supertest": "6.1.6",
