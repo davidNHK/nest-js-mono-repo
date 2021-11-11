@@ -1,5 +1,5 @@
 # Builder Stage
-FROM node:17.0.1-alpine3.13 AS builder
+FROM node:17.1.0-alpine3.13 AS builder
 
 WORKDIR /usr/src/prmotion-service
 
@@ -10,7 +10,7 @@ RUN npm ci --ignore-scripts && \
     npx lerna run --stream build
 
 # Run stage
-FROM node:17.0.1-alpine3.13
+FROM node:17.1.0-alpine3.13
 
 WORKDIR /usr/src/prmotion-service
 
