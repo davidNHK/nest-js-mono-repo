@@ -14,7 +14,7 @@
     "@types/node": "16.11.8",
     "@types/ramda": "0.27.50",
     "@types/serialize-error": "4.0.1",
-    "eslint": "7.32.0",
+    "eslint": "8.2.0",
     "jest": "27.3.1",
     "ts-node": "10.4.0",
     "typescript": "4.5.2"
