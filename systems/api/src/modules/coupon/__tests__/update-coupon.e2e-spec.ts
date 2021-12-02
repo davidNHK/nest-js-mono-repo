@@ -18,7 +18,7 @@ const appContext = withNestServerContext({
   imports: [CouponModule],
 });
 describe('PATCH /admin/v1/coupons/:code', () => {
-  it.each([undefined, now.endOf('month').toJSDate()])(
+  it.each([undefined, now.endOf('month').toJSDate().toISOString()])(
     'Only update description for running coupon - end_date is %s',
     async endDate => {
       const app = appContext.app;
@@ -51,11 +51,11 @@ describe('PATCH /admin/v1/coupons/:code', () => {
         code: coupon.code,
         description: 'hello world',
         discountType: 'AMOUNT',
-        endDate: coupon.endDate?.toISOString() ?? null,
+        endDate: coupon.endDate ?? null,
         id: expect.any(String),
         metadata: {},
         product: 'fake-product-id',
-        startDate: coupon.startDate.toISOString(),
+        startDate: coupon.startDate,
       });
     },
   );

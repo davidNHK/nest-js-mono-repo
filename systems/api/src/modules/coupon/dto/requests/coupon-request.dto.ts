@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
-  IsDate,
   IsEnum,
   IsNumber,
   IsObject,
@@ -9,12 +8,12 @@ import {
   IsString,
   Max,
   Min,
-  MinDate,
   Validate,
   ValidateIf,
 } from 'class-validator';
 
 import { DiscountType } from '../../constants/discount-type.constants';
+import { AfterDate } from './validate/AfterDate';
 import { BeforeDate } from './validate/BeforeDate';
 
 export class CouponRequestDto {
@@ -35,12 +34,10 @@ export class CouponRequestDto {
   description?: string;
 
   @Validate(BeforeDate, ['endDate'])
-  @IsDate()
   @Type(() => Date)
   startDate!: Date;
 
-  @MinDate(new Date())
-  @IsDate()
+  @Validate(AfterDate, [{ minDate: new Date() }])
   @Type(() => Date)
   @IsOptional()
   endDate?: Date;

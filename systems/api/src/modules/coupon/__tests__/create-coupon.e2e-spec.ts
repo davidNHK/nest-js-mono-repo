@@ -42,7 +42,7 @@ describe('POST /admin/v1/coupons', () => {
         id: expect.any(String),
         metadata: {},
         product: couponPayload.product,
-        startDate: couponPayload.startDate.toISOString(),
+        startDate: couponPayload.startDate,
         ...coupon,
       });
     },
