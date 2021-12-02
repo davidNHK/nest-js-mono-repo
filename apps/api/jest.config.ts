@@ -18,8 +18,9 @@ const config: Config.InitialOptions = {
   testEnvironment: '<rootDir>/test/helpers/jest/e2e-test-environment.ts',
   testRegex: '.*.spec.ts$',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.(t)s$': 'ts-jest',
   },
+  transformIgnorePatterns: ['node_modules/(?!(serialize-error)).*\\.js$'],
 };
 
 // eslint-disable-next-line import/no-default-export
