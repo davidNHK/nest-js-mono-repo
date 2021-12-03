@@ -13,6 +13,8 @@ export class BeforeDate implements ValidatorConstraintInterface {
     const comparingFieldValue =
       currentObject[validationArguments.constraints[0] as string];
     if (!comparingFieldValue) return true;
-    return currentValue?.getTime() < comparingFieldValue?.getTime();
+    return (
+      new Date(currentValue).getTime() < new Date(comparingFieldValue).getTime()
+    );
   }
 }

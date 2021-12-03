@@ -58,7 +58,7 @@
     "babel-plugin-add-import-extension": "1.6.0",
     "babel-plugin-module-resolver": "4.1.0",
     "babel-plugin-transform-typescript-metadata": "0.3.2",
-    "eslint": "7.32.0",
+    "eslint": "8.3.0",
     "jest": "27.4.3",
     "jest-environment-node": "27.4.2",
     "supertest": "6.1.6",
@@ -92,7 +92,7 @@
     "seed:up": "npx typeorm migration:run --config ./ormconfig.seed.cli.cjs",
     "start:dev": "NODE_ENV=development npm run migration:up && npm run seed:up && NODE_ENV=development nest start --watch",
     "start:prod": "npm run migration:up && node dist/mjs/main.js",
-    "test": "NODE_ENV=test jest --maxWorkers=50%",
+    "test": "npm run buld && NODE_ENV=test jest --maxWorkers=50%",
     "test:ci": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --ci --coverage --runInBand --bail",
     "typeorm:dev": "NODE_ENV=development node --require ts-node/register ./node_modules/typeorm/cli.js"
   },

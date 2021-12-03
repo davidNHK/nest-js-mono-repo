@@ -49,7 +49,7 @@ export function couponBuilder(override?: Partial<CreateCouponBodyDto>): any {
   const result = {
     metadata: {},
     product: 'fake-product-id',
-    startDate: now.startOf('month').toJSDate(),
+    startDate: now.startOf('month').toJSDate().toISOString(),
     ...override,
   };
   return result;

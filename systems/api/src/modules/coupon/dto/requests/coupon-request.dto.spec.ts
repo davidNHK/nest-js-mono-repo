@@ -1,6 +1,6 @@
 import { couponBuilder } from '@api-test-helpers/seeders/coupons';
 import { describe, expect, it } from '@jest/globals';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
 import { DiscountType } from '../../constants/discount-type.constants';
@@ -14,7 +14,7 @@ describe('Test CouponDto', () => {
       code: 'fake-code',
       discountType: DiscountType.Amount,
     });
-    const instance = plainToClass<CouponRequestDto, any>(CouponRequestDto, {
+    const instance = plainToInstance<CouponRequestDto, any>(CouponRequestDto, {
       ...raw,
       id: 'fake-id',
     });
@@ -29,10 +29,13 @@ describe('Test CouponDto', () => {
         code: 'fake-code',
         discountType,
       });
-      const instance = plainToClass<CouponRequestDto, any>(CouponRequestDto, {
-        ...raw,
-        id: 'fake-id',
-      });
+      const instance = plainToInstance<CouponRequestDto, any>(
+        CouponRequestDto,
+        {
+          ...raw,
+          id: 'fake-id',
+        },
+      );
       const err = await validateOrReject(instance).catch(e => e);
       expect(err.toString()).toMatchSnapshot();
     },
@@ -48,7 +51,7 @@ describe('Test CouponDto', () => {
       endDate: '2021-04-01T00:00:aaZ',
       startDate: '2021-14-01T00:00:00Z',
     } as any);
-    const instance = plainToClass<CouponRequestDto, any>(CouponRequestDto, {
+    const instance = plainToInstance<CouponRequestDto, any>(CouponRequestDto, {
       ...raw,
       id: 'fake-id',
     });
@@ -56,9 +59,9 @@ describe('Test CouponDto', () => {
 
     expect(err.toString()).toMatchInlineSnapshot(`
       "An instance of CouponRequestDto has failed the validation:
-       - property startDate has failed the following constraints: isDate, BeforeDate 
+       - property startDate has failed the following constraints: BeforeDate 
       ,An instance of CouponRequestDto has failed the validation:
-       - property endDate has failed the following constraints: isDate, minDate 
+       - property endDate has failed the following constraints: AfterDate 
       "
     `);
   });
@@ -69,10 +72,10 @@ describe('Test CouponDto', () => {
       amountOff: 10,
       code: 'fake-code',
       discountType: DiscountType.Amount,
-      endDate: new Date('2021-04-01T00:00:00Z'),
-      startDate: new Date('2021-05-01T00:00:00Z'),
+      endDate: new Date('2021-04-01T00:00:00Z').toISOString(),
+      startDate: new Date('2021-05-01T00:00:00Z').toISOString(),
     });
-    const instance = plainToClass<CouponRequestDto, any>(CouponRequestDto, {
+    const instance = plainToInstance<CouponRequestDto, any>(CouponRequestDto, {
       ...raw,
       id: 'fake-id',
     });
@@ -81,7 +84,7 @@ describe('Test CouponDto', () => {
       "An instance of CouponRequestDto has failed the validation:
        - property startDate has failed the following constraints: BeforeDate 
       ,An instance of CouponRequestDto has failed the validation:
-       - property endDate has failed the following constraints: minDate 
+       - property endDate has failed the following constraints: AfterDate 
       "
     `);
   });
