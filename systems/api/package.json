@@ -39,7 +39,7 @@
     "@babel/preset-env": "7.16.4",
     "@babel/preset-typescript": "7.16.0",
     "@busybox/eslint-config": "5.7.1",
-    "@busybox/tsconfig": "1.6.0",
+    "@busybox/tsconfig": "1.6.1",
     "@jest/globals": "27.4.2",
     "@nestjs/cli": "8.1.5",
     "@nestjs/schematics": "8.0.5",
