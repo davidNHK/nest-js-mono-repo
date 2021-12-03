@@ -15,8 +15,8 @@ lerna-debug.log*
 
 # Tests
 coverage/
-apps/api/coverage/
-apps/api/test/coverage/
+systems/api/coverage/
+systems/api/src/test/coverage/
 
 /.nyc_output
 
