@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  dev-db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=${USER}
+      - POSTGRES_PASSWORD=dev
+    volumes:
+      - type: bind
+        source: ./scripts/docker/setup-local-postgres.sql
+        target: /docker-entrypoint-initdb.d/setup-local-postgres.sql
+  dev-redis:
+    image: "redis:6"
+  dev-api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - dev-db
+      - dev-redis
+    env_file:
+      - .env
+    environment:
+      - DATABASE_CONNECTION_URL=postgres://${USER}:dev@dev-db:5432/dev
+      - REDIS_HOST=redis://dev-redis:6379
+    ports:
+      - "5333:5333"
+    entrypoint: "npm run start:prod"

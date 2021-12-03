@@ -1,0 +1,28 @@
+name: Test systems/api
+
+on:
+  push:
+    branches:
+      - development
+      - master
+    paths:
+      - 'systems/api/**'
+  pull_request:
+    paths:
+      - 'systems/api/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+        id: nvm
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+      - run: bash ./scripts/setup.sh
+      - run: npx lerna exec --stream --concurrency 1 --scope=api -- bash scripts/ci/setup.sh
+      - run: npx lerna exec --stream --concurrency 1 --scope=api -- bash scripts/ci/test.sh
