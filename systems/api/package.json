@@ -51,7 +51,7 @@
     "@types/luxon": "2.0.7",
     "@types/node": "16.11.11",
     "@types/passport-jwt": "3.0.6",
-    "@types/ramda": "0.27.59",
+    "@types/ramda": "0.27.60",
     "@types/supertest": "2.0.11",
     "@types/uuid": "8.3.3",
     "babel-jest": "27.4.2",
