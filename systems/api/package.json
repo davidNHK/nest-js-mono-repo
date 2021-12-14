@@ -41,7 +41,7 @@
     "@busybox/eslint-config": "5.7.1",
     "@busybox/tsconfig": "1.6.1",
     "@jest/globals": "27.4.4",
-    "@nestjs/cli": "8.1.5",
+    "@nestjs/cli": "8.1.6",
     "@nestjs/schematics": "8.0.5",
     "@nestjs/testing": "8.2.3",
     "@types/convict": "6.1.1",
