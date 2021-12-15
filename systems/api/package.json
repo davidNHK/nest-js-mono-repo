@@ -49,7 +49,7 @@
     "@types/ioredis": "4.28.4",
     "@types/jest": "27.0.3",
     "@types/luxon": "2.0.8",
-    "@types/node": "16.11.12",
+    "@types/node": "16.11.13",
     "@types/passport-jwt": "3.0.6",
     "@types/ramda": "0.27.60",
     "@types/supertest": "2.0.11",
