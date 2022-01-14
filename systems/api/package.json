@@ -17,7 +17,7 @@
     "ioredis": "4.28.3",
     "jwks-rsa": "2.0.5",
     "luxon": "2.3.0",
-    "passport": "0.4.1",
+    "passport": "0.5.2",
     "passport-jwt": "4.0.0",
     "pg": "8.7.1",
     "pg-pool": "3.4.1",
