@@ -14,7 +14,7 @@
     "convict": "6.2.1",
     "dotenv": "16.0.0",
     "helmet": "5.0.2",
-    "ioredis": "4.28.3",
+    "ioredis": "4.28.4",
     "jwks-rsa": "2.0.5",
     "luxon": "2.3.0",
     "passport": "0.5.2",
