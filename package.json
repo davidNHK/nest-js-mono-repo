@@ -29,6 +29,6 @@
     "markdownlint-cli2": "0.4.0",
     "mrm": "3.0.10",
     "npm-package-json-lint": "6.0.3",
-    "prettier": "2.5.1"
+    "prettier": "2.6.0"
   }
 }
