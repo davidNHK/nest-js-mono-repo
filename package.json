@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "author": "",
   "private": true,
-  "repository": "git@github.com:davidNHK/nest-js-monorepo.git",
+  "repository": "git@github.com/davidNHK/project-bootstrap",
   "engines": {
-    "node": "16"
+    "node": ">=16",
+    "yarn": "Use npm"
   },
   "license": "MIT",
   "scripts": {

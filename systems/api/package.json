@@ -14,7 +14,6 @@
     "convict": "6.2.1",
     "dotenv": "16.0.0",
     "helmet": "5.0.2",
-    "ioredis": "4.28.5",
     "jwks-rsa": "2.0.5",
     "luxon": "2.3.1",
     "passport": "0.5.2",
@@ -46,7 +45,6 @@
     "@nestjs/testing": "8.4.1",
     "@types/convict": "6.1.1",
     "@types/express": "4.17.13",
-    "@types/ioredis": "4.28.10",
     "@types/jest": "27.4.1",
     "@types/luxon": "2.3.1",
     "@types/node": "17.0.21",
@@ -77,7 +75,7 @@
   "repository": {
     "directory": "apps/api",
     "type": "git",
-    "url": "git@github.com:davidNHK/nest-js-monorepo.git"
+    "url": "git@github.com/davidNHK/project-bootstrap"
   },
   "scripts": {
     "build": "npm run mjs:build && npm run cjs:build",
