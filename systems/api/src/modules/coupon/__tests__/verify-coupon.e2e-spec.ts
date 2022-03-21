@@ -57,12 +57,12 @@ describe('POST /v1/coupons/:code/validate', () => {
   `(
     '$couponCode coupon should valid and deduct amount from $amount to $deductedAmount',
     async ({
-      couponCode,
-      discountType,
-      coupon,
       amount,
-      exceptedOff,
+      coupon,
+      couponCode,
       deductedAmount,
+      discountType,
+      exceptedOff,
     }) => {
       const { app } = appContext;
       const [application] = await createApplicationInDB(appContext.module, [

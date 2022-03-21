@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "ESNext",
-    "moduleResolution": "node",
     "outDir": "./dist",
     "paths": {
       "@api-test-helpers/*": ["src/test/helpers/*"],
       "@api/*": ["src/*"]
-    },
-    "target": "ESNext"
+    }
   },
 
   "exclude": ["node_modules", "src/test", "dist", "**/*spec.ts"],

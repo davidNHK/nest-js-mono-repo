@@ -20,7 +20,7 @@ describe('POST /admin/v1/coupons', () => {
     ${'effect-percent-off-discount'} | ${DiscountType.EffectPercent} | ${{ effect: 'world', percentOff: 10 }}
   `(
     '$discountType coupon - $code created',
-    async ({ code, discountType, coupon }) => {
+    async ({ code, coupon, discountType }) => {
       const app = appContext.app;
       const couponPayload = couponBuilder({
         active: true,

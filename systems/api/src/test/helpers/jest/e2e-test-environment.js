@@ -8,7 +8,7 @@ const { createConnection } = typeorm;
 dotenv.config({ path: '.env.test' });
 
 function generateTestId(testPath) {
-  const { name, dir } = path.parse(path.relative(process.cwd(), testPath));
+  const { dir, name } = path.parse(path.relative(process.cwd(), testPath));
 
   const suffix = path
     .join(dir, name.replace(/\.(e2e-spec|spec)$/, ''))

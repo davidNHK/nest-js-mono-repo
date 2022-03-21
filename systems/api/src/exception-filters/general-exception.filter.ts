@@ -38,7 +38,7 @@ export class GeneralExceptionFilter implements ExceptionFilter {
         ? { stack: exception.stack }
         : {};
 
-    const { status, body } = {
+    const { body, status } = {
       body: {
         ...(httpException.getResponse() as Record<string, unknown>),
         ...stack,

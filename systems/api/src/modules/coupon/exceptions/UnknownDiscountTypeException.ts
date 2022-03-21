@@ -10,7 +10,7 @@ export class UnknownDiscountTypeException extends HttpException {
   debugDetails?: Record<string, unknown> | undefined; // Only visible on access log
 
   constructor(response: InputResponse) {
-    const { errors, meta, debugDetails } = response;
+    const { debugDetails, errors, meta } = response;
     super(
       {
         code: 'ERR_UNKNOWN_DISCOUNT_TYPE',
