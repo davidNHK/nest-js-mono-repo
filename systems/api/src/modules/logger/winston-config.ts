@@ -1,9 +1,7 @@
-import winston, { LoggerOptions } from 'winston';
+import { format, LoggerOptions, transports } from 'winston';
 import type Transport from 'winston-transport';
 
 import { Level } from './logging.constants';
-
-const { transports, format } = winston;
 
 const shouldPrettyPrintLog =
   process.env['NODE_ENV'] === 'development' ||

@@ -4,7 +4,6 @@ import { ApplicationModule } from '@api/modules/application/application.module';
 import { AuthModule } from '@api/modules/auth/auth.module';
 import { HealthModule } from '@api/modules/health/health.module';
 import { LoggingModule } from '@api/modules/logger/logging.module';
-import { RedisModule } from '@api/modules/redis/redis.module';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
@@ -45,7 +44,6 @@ import { RedemptionModule } from './modules/redemption/redemption.module';
         };
       },
     }),
-    RedisModule.forRootAsync(),
     AuthModule,
     TerminusModule,
     HealthModule,

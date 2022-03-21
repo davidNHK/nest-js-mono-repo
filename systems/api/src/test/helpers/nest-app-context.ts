@@ -8,7 +8,6 @@ import { AuthModule } from '@api/modules/auth/auth.module';
 import { DbOperationLogger } from '@api/modules/logger/db-operation-logger';
 import { LoggingModule } from '@api/modules/logger/logging.module';
 import { NestLogger } from '@api/modules/logger/nest-logger';
-import { RedisModule } from '@api/modules/redis/redis.module';
 import { afterAll, beforeAll } from '@jest/globals';
 import {
   ClassSerializerInterceptor,
@@ -30,7 +29,6 @@ interface AppContext {
 export async function createTestApp(
   moduleMetadata: ModuleMetadata,
 ): Promise<AppContext> {
-  // @ts-expect-error Don't want spend time to module typing
   const { db } = global['e2eConfig'];
   const module = Test.createTestingModule({
     controllers: [...(moduleMetadata.controllers ?? [])],
@@ -61,7 +59,6 @@ export async function createTestApp(
           };
         },
       }),
-      RedisModule.forRootAsync(),
       AuthModule,
       ...(moduleMetadata.imports ?? []),
     ],

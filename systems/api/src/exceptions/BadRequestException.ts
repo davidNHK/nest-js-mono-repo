@@ -13,7 +13,7 @@ export class BadRequestException extends HttpException {
   debugDetails?: Record<string, unknown> | undefined; // Only visible on access log
 
   constructor(response: InputResponse) {
-    const { errors, meta, debugDetails, code } = response;
+    const { code, debugDetails, errors, meta } = response;
     super(
       {
         code,

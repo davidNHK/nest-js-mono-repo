@@ -15,7 +15,7 @@ export class FindCouponService {
   ) {}
 
   async findManyCoupon(query: FindManyCouponQueryDto) {
-    const { skip, limit, ...filter } = query;
+    const { limit, skip, ...filter } = query;
 
     const [matchedCoupon, total] = await this.couponRepository.findAndCount({
       skip: skip,

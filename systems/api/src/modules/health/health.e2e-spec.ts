@@ -19,16 +19,10 @@ describe('GET /healthz', () => {
         database: {
           status: 'up',
         },
-        redis: {
-          status: 'up',
-        },
       },
       error: {},
       info: {
         database: {
-          status: 'up',
-        },
-        redis: {
           status: 'up',
         },
       },

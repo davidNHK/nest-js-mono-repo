@@ -3,4 +3,3 @@
 set -ex
 
 npx markdownlint-cli2 .
-npx npmPkgJsonLint .

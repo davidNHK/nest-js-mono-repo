@@ -4,7 +4,7 @@ import type { SuperAgentTest } from 'supertest';
 import * as request from 'supertest';
 
 export function createRequestAgent(app: INestApplication) {
-  const { testPath = 'N/A', currentTestName = 'N/A' } = expect.getState();
+  const { currentTestName = 'N/A', testPath = 'N/A' } = expect.getState();
   return request.agent(app).set({
     'X-Test-Name': encodeURI(currentTestName),
     'X-Test-Path': encodeURI(testPath),

@@ -3,7 +3,7 @@ import typeorm from 'typeorm';
 import { DiscountType } from '../constants/discount-type.constants';
 import { Coupon } from './coupon.entity';
 
-const { Column, ChildEntity } = typeorm;
+const { ChildEntity, Column } = typeorm;
 
 @ChildEntity(DiscountType.EffectAmount)
 export class EffectAmountDiscountCoupon extends Coupon {
