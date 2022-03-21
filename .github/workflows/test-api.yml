@@ -16,11 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: echo ::set-output name=NVMRC::$(cat .nvmrc)
-        id: nvm
       - uses: actions/setup-node@v3.0.0
         with:
-          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
       - run: bash ./scripts/setup.sh
