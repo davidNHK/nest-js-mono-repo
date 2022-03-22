@@ -1,6 +1,4 @@
 #!/bin/sh
 
-. "$(dirname $0)/_/husky.sh"
-
 set -ex
-npx lerna run --concurrency 1 --stream test:e2e --since HEAD~1
+npx lerna exec --concurrency 1 --stream -- bash scripts/pre-push.sh

@@ -1,20 +1,26 @@
-name: dependapot-auto-merge
+name: Test systems/api
 
 on:
+  push:
+    branches:
+      - development
+      - master
+    paths:
+      - 'systems/api/**'
   pull_request:
     paths:
-      - 'apps/api/**'
+      - 'systems/api/**'
 
 jobs:
-  test-api:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.0.0
         with:
-          node-version: 16.x
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
       - run: bash ./scripts/setup.sh
-      - run: npx lerna run --stream --scope=api lint
-      - run: npx lerna run --stream --scope=api test:ci
-      - run: npx lerna run --stream --scope=api test:e2e:ci
+      - run: npx lerna exec --stream --concurrency 1 --scope=api -- bash scripts/ci/setup.sh
+      - run: npx lerna exec --stream --concurrency 1 --scope=api -- bash scripts/ci/test.sh
