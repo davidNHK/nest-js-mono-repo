@@ -1,3 +1,4 @@
+import { http } from '@api/modules/logger/formats/http';
 import {
   CallHandler,
   ExecutionContext,
@@ -7,8 +8,6 @@ import {
 } from '@nestjs/common';
 import type { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
-import { http } from '../modules/logger/formats/http';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {

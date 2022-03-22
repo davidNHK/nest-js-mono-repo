@@ -50,7 +50,7 @@ export async function createTestApp(
             autoLoadEntities: true,
             logger,
             logging: true,
-            migrations: ['dist/cjs/migrations/*.cjs'],
+            migrations: ['cjs-dist/migrations/*.cjs'],
             migrationsRun: true,
             namingStrategy: new SnakeNamingStrategy() as any,
             schema: db.schema,

@@ -24,22 +24,22 @@ const moduleAliasPlugin = [
 ]
 
 const commonJSModules = ["@babel/preset-env", {
-      "targets": {
-        "node": "current",
-      },
-      "modules": "auto"
-    }]
+  "targets": {
+    "node": "current",
+  },
+  "modules": "auto"
+}]
 
 
 module.exports= {
-    "exclude": [".*spec.*"],
-    "presets": [
-        commonJSModules,
-        typescript
-      ],
-      "plugins": [
-        ...typescriptPlugins,
-        moduleAliasPlugin,
-        ["babel-plugin-add-import-extension", { extension: "cjs" }],
-      ]
+  "exclude": [".*spec.*"],
+  "presets": [
+    commonJSModules,
+    typescript
+  ],
+  "plugins": [
+    ...typescriptPlugins,
+    moduleAliasPlugin,
+    ["babel-plugin-add-import-extension", { extension: "cjs" }],
+  ]
 }

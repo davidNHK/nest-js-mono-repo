@@ -1,8 +1,8 @@
-import { Level } from '@api/modules/logger/logging.constants';
 import { Inject, LoggerService } from '@nestjs/common';
 import type { Logform } from 'winston';
 
 import { Logger } from './logger';
+import { Level } from './logging.constants';
 
 function isInfoObj(
   infoObj: Logform.TransformableInfo | string,

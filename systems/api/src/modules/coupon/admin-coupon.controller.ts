@@ -1,4 +1,4 @@
-import { OpenIdClientCredentialsGrant } from '@api/modules/auth';
+import { OpenIdClientCredentialsGrant } from '@api/modules/auth/index';
 import {
   Body,
   Controller,

@@ -1,8 +1,8 @@
+import { Logger } from '@api/modules/logger/logger';
 import { describe, expect, it, jest } from '@jest/globals';
 import { Test } from '@nestjs/testing';
 import { from, Observable } from 'rxjs';
 
-import { Logger } from '../modules/logger/logger';
 import { LoggingInterceptor } from './logging.interceptor';
 
 describe('LoggingInterceptor', () => {

@@ -1,4 +1,3 @@
-import { AppClientSecretKey, AppServerSecretKey } from '@api/modules/auth';
 import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -15,7 +14,6 @@ import { VerifyCouponService } from './services/verify-coupon.service';
 export class PublicCouponController {
   constructor(private verifyCouponService: VerifyCouponService) {}
 
-  @AppClientSecretKey()
   @Post('/client/v1/coupons/:code/validate')
   @HttpCode(200)
   async verifyCouponClient(
@@ -29,7 +27,6 @@ export class PublicCouponController {
     return new VerifyCouponResponseDto(verifiedResponse);
   }
 
-  @AppServerSecretKey()
   @Post('/v1/coupons/:code/validate')
   @HttpCode(200)
   async verifyCouponServer(

@@ -79,23 +79,22 @@
     "url": "git@github.com/davidNHK/project-bootstrap"
   },
   "scripts": {
-    "build": "npm run mjs:build && npm run cjs:build",
-    "cjs:build": "npx babel --config-file ./.babelrc.cjs.cjs --out-file-extension .cjs --out-dir ./dist/cjs/ --extensions .ts ./src/",
+    "build": "npx babel --config-file ./.babelrc.esm.mjs --out-dir ./dist/ --extensions .ts ./src/",
+    "build:test": "npx babel --config-file ./.babelrc.cjs.cjs --out-file-extension .cjs --out-dir ./cjs-dist/ --extensions .ts ./src/",
     "eslint": "eslint --ext=json,ts,yml",
     "lint": "npm run eslint -- .",
     "migration:create": "npx typeorm migration:create --config ./ormconfig.cli.cjs",
     "migration:down": "npx typeorm migration:revert --config ./ormconfig.cli.cjs",
     "migration:up": "npx typeorm migration:run --config ./ormconfig.cli.cjs",
-    "mjs:build": "npx babel --config-file ./.babelrc.esm.mjs --out-dir ./dist/mjs --extensions .ts ./src/",
     "prebuild": "rimraf dist",
-    "precommit": "lint-staged",
     "seed:create": "npx typeorm migration:create --config ./ormconfig.seed.cli.cjs",
     "seed:up": "npx typeorm migration:run --config ./ormconfig.seed.cli.cjs",
-    "start:dev": "NODE_ENV=development npm run migration:up && npm run seed:up && NODE_ENV=development nest start --watch",
-    "start:prod": "npm run migration:up && node dist/mjs/main.js",
+    "start:dev": "npm run build && node ./dist/main.js",
+    "start:prod": "node ./dist/main.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --maxWorkers=50%",
     "test:ci": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --ci --coverage --runInBand --bail",
-    "typeorm:dev": "NODE_ENV=development node --require ts-node/register ./node_modules/typeorm/cli.js"
+    "typeorm:dev": "NODE_ENV=development node --require ts-node/register ./node_modules/typeorm/cli.js",
+    "watch:build": "NODE_ENV=development nodemon ./dist/main.js"
   },
   "type": "module",
   "version": "0.2.0"

@@ -17,10 +17,7 @@ const testConfig= {
     commonJSModules,
     typescript
   ],
-  "plugins": [
-    ...typescriptPlugins,
-    // ["babel-plugin-add-import-extension", {extensions: ".js"}],
-  ]
+  "plugins": typescriptPlugins
 }
 module.exports = {
   "env": {

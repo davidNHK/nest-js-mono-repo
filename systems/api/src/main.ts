@@ -1,4 +1,3 @@
-import { FindApplicationService } from '@api/modules/application/services/find-application.service';
 import { Logger } from '@api/modules/logger/logger';
 import { NestLogger } from '@api/modules/logger/nest-logger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
@@ -15,20 +14,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new NestLogger(new Logger()),
   });
-  app.enableCors({
-    origin: async (origin, callback) => {
-      const applications = await app
-        .get<FindApplicationService>(FindApplicationService)
-        .findByOrigin(origin)
-        .catch(e => {
-          callback(e);
-          return null;
-        });
-      if (!applications || applications?.length === 0)
-        return callback(null, false);
-      return callback(null, origin);
-    },
-  });
+
   app.use(helmet());
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
@@ -52,30 +38,10 @@ async function bootstrap() {
   const logger = app.get(NestLogger);
   app.useLogger(logger);
   const options = new DocumentBuilder()
-    .setTitle('Promotion API')
-    .setDescription('promotion related API')
+    .setTitle('Example API')
+    .setDescription('Example API')
     .setVersion('1.0')
     .addBearerAuth()
-    .addSecurity('app-server-name', {
-      in: 'header',
-      name: 'X-APP',
-      type: 'apiKey',
-    })
-    .addSecurity('app-server-secret-key', {
-      in: 'header',
-      name: 'X-APP-TOKEN',
-      type: 'apiKey',
-    })
-    .addSecurity('app-client-name', {
-      in: 'header',
-      name: 'X-CLIENT-APPLICATION',
-      type: 'apiKey',
-    })
-    .addSecurity('app-client-secret-key', {
-      in: 'header',
-      name: 'X-CLIENT-TOKEN',
-      type: 'apiKey',
-    })
     .build();
   const document = SwaggerModule.createDocument(app, options);
   await SwaggerModule.setup('/docs', app, document, {});
