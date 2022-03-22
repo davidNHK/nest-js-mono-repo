@@ -44,13 +44,6 @@ const configSchema = convict({
     env: 'PORT',
     format: 'port',
   },
-  redis: {
-    host: {
-      default: null,
-      env: 'REDIS_HOST',
-      format: String,
-    },
-  },
   secret: {
     trackingID: {
       default: null,

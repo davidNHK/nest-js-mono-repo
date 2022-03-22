@@ -6,7 +6,7 @@
   "private": true,
   "repository": "git@github.com/davidNHK/project-bootstrap",
   "engines": {
-    "node": ">=16",
+    "node": ">=14",
     "yarn": "Use npm"
   },
   "license": "MIT",
@@ -19,7 +19,7 @@
     "lerna": "4.0.0"
   },
   "devDependencies": {
-    "@busybox/prettier-config": "1.2.2",
+    "@busybox/prettier-config": "1.2.3",
     "@commitlint/cli": "16.2.3",
     "@commitlint/config-lerna-scopes": "16.2.2",
     "commitlint": "16.2.3",

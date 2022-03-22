@@ -22,6 +22,4 @@ services:
       - source: ./scripts/docker/setup-local-postgres.sql
         target: /docker-entrypoint-initdb.d/setup-local-postgres.sql
         type: bind
-  migration-redis:
-    image: 'redis:6'
 version: '3.7'
