@@ -1,8 +1,7 @@
 import type { VerifyingOrderItemRequest } from '@api/modules/coupon/dto/requests/verify-coupon.dto';
-import type { RedemptionOrderItemRequest } from '@api/modules/redemption/dto/requests/create-redemption.dto';
 
 export function productBuilder(
-  override?: Partial<VerifyingOrderItemRequest | RedemptionOrderItemRequest>,
+  override?: Partial<VerifyingOrderItemRequest>,
 ): any {
   const result = {
     price: 0,

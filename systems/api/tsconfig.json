@@ -3,8 +3,8 @@
     "baseUrl": "./",
     "outDir": "./dist",
     "paths": {
-      "@api-test-helpers/*": ["src/test/helpers/*"],
-      "@api/*": ["src/*"]
+      "@api-test-helpers/*": ["./src/test/helpers/*"],
+      "@api/*": ["./src/*"]
     }
   },
 

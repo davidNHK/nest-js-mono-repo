@@ -1,10 +1,10 @@
-import { err } from '@api/modules/logger/formats/err';
-import { Level } from '@api/modules/logger/logging.constants';
 import { Inject } from '@nestjs/common';
 import type { Logger as TypeORMLogger } from 'typeorm';
 import type { Logform } from 'winston';
 
+import { err } from './formats/err';
 import { Logger } from './logger';
+import { Level } from './logging.constants';
 
 export class DbOperationLogger implements TypeORMLogger {
   constructor(@Inject(Logger) private logger: Logger) {}

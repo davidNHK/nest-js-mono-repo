@@ -33,8 +33,8 @@ const config = {
     esModules, typescript],
   "plugins": [
     ...typescriptPlugins,
+    ["babel-plugin-add-import-extension", {extensions: ".js"}],
     moduleAliasPlugin,
-    ["babel-plugin-add-import-extension"],
   ]
 }
 

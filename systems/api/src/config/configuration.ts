@@ -44,13 +44,6 @@ const configSchema = convict({
     env: 'PORT',
     format: 'port',
   },
-  secret: {
-    trackingID: {
-      default: null,
-      env: 'SECRET_TRACKING_ID',
-      format: 'comma-separated-value',
-    },
-  },
 });
 
 export function configuration() {

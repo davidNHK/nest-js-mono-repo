@@ -1,4 +1,5 @@
 import { ErrorCode } from '@api/exceptions/ErrorCode';
+import { err } from '@api/modules/logger/formats/err';
 import { http } from '@api/modules/logger/formats/http';
 import {
   ArgumentsHost,
@@ -9,8 +10,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
-
-import { err } from '../modules/logger/formats/err';
 
 @Catch()
 export class GeneralExceptionFilter implements ExceptionFilter {

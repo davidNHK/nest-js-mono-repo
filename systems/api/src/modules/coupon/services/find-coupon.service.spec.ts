@@ -57,7 +57,6 @@ describe('FindManyCouponService', () => {
 
     const service = app.get<FindCouponService>(FindCouponService);
     const filter = {
-      application: 'mock-app-name',
       limit: 20,
       skip: 0,
     };
